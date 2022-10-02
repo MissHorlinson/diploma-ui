@@ -1,0 +1,53 @@
+.titleRow {
+    background-color: rgb(166, 239, 248);
+    display: flex;
+    flex-direction: row;
+}
+
+.headItemTitle {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid grey;
+    padding: 5px;
+}
+
+.headDoubletemTitle {
+    flex: 2;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid grey;
+    padding: 5px;
+}
+
+.bodyContainer  {
+    display: flex;
+    flex-direction: column;
+}
+
+.bodyRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.bodyItem  {
+    flex: 1;
+    border: 1px solid grey;
+    padding: 5px;
+}
+
+.bodyDoubleItem  {
+    flex: 2;
+    border: 1px solid grey;
+    padding: 5px;
+}
+
+
+.actionBtn {
+    padding: 2px;
+    margin: 2px;
+}
+
+.semDiv {
+    text-align: center;
+}

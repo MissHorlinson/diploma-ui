@@ -11,3 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.viewControlBtn {
+  visibility: hidden;
+}
+
+.updateControlBtn {
+  text-align: center;
+  visibility: visible;
+}
