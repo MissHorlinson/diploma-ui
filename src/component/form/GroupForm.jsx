@@ -52,7 +52,7 @@ const GroupForm = ({ onSave, facultyList, groupToUpdate, btnClass, onCancel }) =
                 <label>Name</label>
                 <MyInputValidator
                     value={group.name}
-                    onText={text => setValue({ name: text })}
+                    onText={(text) => setValue({ name: text })}
                     name="name"
                     placeholder="Name"
                     className="form-control"

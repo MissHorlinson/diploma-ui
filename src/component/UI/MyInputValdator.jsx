@@ -10,7 +10,7 @@ const MyInputValidator = (props) => {
     return (<input
         {...props}
         type="text"
-        className={valid ? className + ' is-valid' : valid === null ? className : className + ' is-invalid'}
+        className={valid ? className : valid === null ? className : className + ' is-invalid'}
         onChange={e => {
             const text = e.target.value
             if (text.length < minLength) {

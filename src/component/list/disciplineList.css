@@ -1,0 +1,49 @@
+.titleRow {
+    background-color: rgb(166, 239, 248);
+    display: flex;
+    flex-direction: row;
+}
+
+.headItemTitle {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid grey;
+    padding: 5px;
+    min-width: 100px;
+}
+
+.headDoubletemTitle {
+    flex: 2;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid grey;
+    padding: 5px;
+    min-width: 150px;
+}
+
+.bodyItem  {
+    flex: 1;
+    border: 1px solid grey;
+    padding: 5px;
+    min-width: 100px;
+}
+
+.bodyDoubleItem  {
+    flex: 2;
+    border: 1px solid grey;
+    padding: 5px;
+    min-width: 150px;
+}
+
+.bodyContainer  {
+    display: flex;
+    flex-direction: column;
+}
+
+.bodyRow {
+    display: flex;
+    flex-direction: row;
+}
+
+

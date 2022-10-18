@@ -16,11 +16,6 @@ const WeekFormItem = ({ weeks, studuingTypeList, onAdd }) => {
         const oldWeek = weekPlan[index].week
         const newWeek = { ...oldWeek, studyingType: { id: typeId } }
         setWeekPlan(_items => [..._items.filter((_value, _index) => _index !== index), { id: index, week: { ...newWeek } }].sort((a, b) => a.id - b.id))
-
-        // weekPlan.find(() => weekPlan[key]).studyingType.id = typeId;   
-        // weekPlan[key].studyingType.id = typeId
-        // setWeeksPlanList(_items => [..._items.filter(({ semester }) => semester !== sem), { semester: sem, week: { ...newWeek } }].sort((a, b) => a.semester - b.semester))
-        // studyingType.find(({ semester }) => semester === sem).typeName = typeId
     };
 
     const setValue = (key, val, index) => {
@@ -34,6 +29,7 @@ const WeekFormItem = ({ weeks, studuingTypeList, onAdd }) => {
         setWeekPlan(_items => [..._items.filter((_value, _index) => _index !== index), { id: index, week: { ...newWeek } }].sort((a, b) => a.id - b.id))
     }
 
+    // console.log(weekPlan)
     return (
         <>
             {
@@ -42,7 +38,7 @@ const WeekFormItem = ({ weeks, studuingTypeList, onAdd }) => {
                     <div style={{ display: "flex", flexDirection: "row", paddingInline: 2 }} key={week.semester + id}>
                         <div className="form-group" style={{ margin: 2, flex: 1.5 }}>
                             <MySelect
-                                // value={weeks[i].studuingTypeList}
+                                value={week.studyingType?.id}
                                 onChange={(type) => studyingTypeSet(week, type, id)}
                                 defaultValue="Форма навчання"
                                 options={studuingTypeList} />
@@ -78,9 +74,10 @@ const WeekFormItem = ({ weeks, studuingTypeList, onAdd }) => {
                                     <img src={require(`../../icon/plusIcon.png`)} alt="+" onClick={() => onAdd(weekPlan, week.semester)} />
                                 </button>
                                 :
-                                <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }}>
-                                    <img src={require(`../../icon/checkIcon.png`)} alt="+" />
-                                </button>
+                                <div style={{ flex: 0.56 }}></div>
+                            // <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }}>
+                            //     <img src={require(`../../icon/checkIcon.png`)} alt="!" />
+                            // </button>
                         }
                     </div>
                 )

@@ -13,11 +13,12 @@ import MySearch from "../UI/MySearch";
 import AllPlanList from "../list/AllPlanList";
 import WeekForm from "../form/WeekForm";
 import DisciplineForm from "../form/DisciplineForm";
+import PlanDisciplineList from "../list/PlanDisciplineList";
+import Discipline from "./Discipline";
 
 
 
 const Plan = () => {
-
 
     const [planList, setPlanList] = useState([]);
 
@@ -34,7 +35,7 @@ const Plan = () => {
     const [btnClass, setBtnClass] = useState('updateControlBtn');
     const [filter, setFilter] = useState({ query: '' });
 
-    const [fetchUtilData, isListLoading, listError] = useFetching(async () => {
+    const [fetchData, isListLoading, listError] = useFetching(async () => {
 
         getBase().then((base) => {
             setBaseList(base);
@@ -64,12 +65,21 @@ const Plan = () => {
     });
 
     useEffect(() => {
-        fetchUtilData();
+        fetchData();
     }, []);
 
     const savePlan = (planInfo) => {
-        // savePlanInfo(planInfo)
-        setModal(false)
+        savePlanInfo(planInfo).then((resp_) => {
+            let objIndex = planList.findIndex((obj) => obj.id === resp_.id)
+            if (objIndex === -1) {
+                setPlanList([...planList, resp_]);
+                // .sort((a, b) => a.id.localeCompare(b.id))
+            } else {
+                planList[objIndex] = resp_;
+                setPlanList([...planList]);
+            }
+            setModal(false)
+        })
     }
 
     return (
@@ -116,15 +126,11 @@ const Plan = () => {
                 <Route path=':planId/disciplines' element={
                     <>
                         <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}>{"\<- Plan"}</Link>
-                        <DisciplineForm />
+                        <Discipline />
                     </>
                 }>
                 </Route>
             </Routes>
-
-
-
-
         </div>
     )
 }

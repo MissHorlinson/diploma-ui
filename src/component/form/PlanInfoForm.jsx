@@ -21,28 +21,29 @@ const initVal = {
 const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherList, studyingFormList, stepList, btnClass, onCancel, onCreate }) => {
 
     const [planInfo, setPlanInfo] = useState(initVal);
-    const [rector, setRector] = useState("");
-    const [qualification, setQualification] = useState("");
-    const [term, setTerm] = useState("");
-    const [base, setBase] = useState("");
-    const [step, setStep] = useState("");
-    const [cipher, setCipher] = useState("");
-    const [form, setForm] = useState("");
+    const [rector, setRector] = useState('');
+    const [qualification, setQualification] = useState('');
+    const [term, setTerm] = useState('');
+    const [base, setBase] = useState('');
+    const [step, setStep] = useState('');
+    const [cipher, setCipher] = useState('');
+    const [form, setForm] = useState('');
 
     const [semesterCheck, setSemesterCheck] = useState([])
 
 
     const createFllPlanInfo = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         planInfo.numberOfSemester = semesterCheck.length;
         let day = planInfo.admissionYear.split('T');
         const fullPlan = {
             ...planInfo, admissionYear: day[0] + 'T00:00:00'
         }
         onCreate(fullPlan);
+
+        console.log("setInit ")
+        console.log(initVal)
         setPlanInfo({ ...initVal });
-        setQualification();
-        setStep();
     }
 
     const setValue = (data) => {
@@ -93,6 +94,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
             setSemesterCheck(_sem => [..._sem.filter(({ key }) => key !== semester)])
         }
     }
+
+    console.log(initVal)
 
     return (
         <div className="container">
@@ -168,31 +171,33 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                     className="form-control" />
             </div>
 
-            {/* <div className="form-group">
-                <label>Кількість груп</label>
-                <MyInputValidator
-                    value={planInfo.numberOfGroup}
-                    onText={text => setValue({ numberOfGroup: text })}
-                    name="firstName"
-                    placeholder="Кількість груп"
-                    className="form-control"
-                    check="^[0-9]+" />
-                <div className="invalid-feedback">
-                    Can be only numbers
+            <div style={{ display: "flex", flexDirection: "row" }}>
+                <div className="form-group" style={{ flex: 1, marginInline: 2 }}>
+                    <label>Кількість груп</label>
+                    <MyInputValidator
+                        value={planInfo.numberOfGroup}
+                        onText={text => setValue({ numberOfGroup: text })}
+                        name="firstName"
+                        placeholder="Кількість груп"
+                        className="form-control"
+                        check="^[0-9]+" />
+                    <div className="invalid-feedback">
+                        Can be only numbers
+                    </div>
                 </div>
-            </div> */}
 
-            <div className="form-group">
-                <label>Кількість студентів</label>
-                <MyInputValidator
-                    value={planInfo.numberOfStudent}
-                    onText={text => setValue({ numberOfStudent: text })}
-                    name="firstName"
-                    placeholder="Кількість студентів"
-                    className="form-control"
-                    check="^[0-9]+" />
-                <div className="invalid-feedback">
-                    can be only numbers
+                <div className="form-group" style={{ flex: 1, marginInline: 2 }}>
+                    <label>Кількість студентів</label>
+                    <MyInputValidator
+                        value={planInfo.numberOfStudent}
+                        onText={(text) => setValue({ numberOfStudent: text })}
+                        name="firstName"
+                        placeholder="Кількість студентів"
+                        className="form-control"
+                        check="^[0-9]+" />
+                    <div className="invalid-feedback">
+                        can be only numbers
+                    </div>
                 </div>
             </div>
 
@@ -280,8 +285,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <button className="btn btn-success" style={{ margin: "5px" }} onClick={createFllPlanInfo}>Save</button>
                 <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={onCancel}>Cancel</button>
             </div>
-        </div>
-    )
-}
+        </div >
+    );
+};
 
 export default PlamInfoForm;

@@ -20,7 +20,7 @@ const Header = () => {
                 } */}
 
                 <div style={{ position: 'relative', right: '50px' }}>
-                    <button className="btn btn-secondary" onClick={console.log("logout")}>Logout</button>
+                    <button className="btn btn-secondary" onClick={() => console.log("logout")}>Logout</button>
                 </div>
             </nav>
         </header>

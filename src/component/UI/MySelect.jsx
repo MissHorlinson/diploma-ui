@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MySelect = ({options, defaultValue, value, onChange}) => {
+const MySelect = ({ options, defaultValue, value, onChange }) => {
     return (
         <select
             value={value}
@@ -13,7 +13,7 @@ const MySelect = ({options, defaultValue, value, onChange}) => {
                     <option key={option.id} value={option.id}>
                         {option.name}
                     </option>
-            )}
+                )}
         </select>
     );
 };
