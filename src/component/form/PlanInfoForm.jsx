@@ -1,26 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import MyInputValidator from "../UI/MyInputValdator";
 import MySelect from "../UI/MySelect";
 
 
-const initVal = {
-    // rector: { id: "" },
-    qualification: { id: '' },
-    studyingTerm: { id: '' },
-    base: { id: '' },
-    step: { id: '' },
-    planCipher: { id: '' },
-    studyingForm: { id: '' },
-    admissionYear: '',
-    numberOfGroup: '',
-    numberOfStudent: '',
-    numberOfSemester: ''
-}
+const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherList, studyingFormList, stepList, btnClass, planToUpdate, onCancel, onCreate }) => {
 
-const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherList, studyingFormList, stepList, btnClass, onCancel, onCreate }) => {
-
-    const [planInfo, setPlanInfo] = useState(initVal);
+    const [planInfo, setPlanInfo] = useState({});
     const [rector, setRector] = useState('');
     const [qualification, setQualification] = useState('');
     const [term, setTerm] = useState('');
@@ -28,74 +14,79 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
     const [step, setStep] = useState('');
     const [cipher, setCipher] = useState('');
     const [form, setForm] = useState('');
+    const [year, setYear] = useState('');
+    const [groupNum, setGroupNum] = useState('');
+    const [studentNum, setStudentNum] = useState('');
 
-    const [semesterCheck, setSemesterCheck] = useState([])
+    const [semesterCheck, setSemesterCheck] = useState([{ isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }])
 
+
+    useEffect(() => {
+        if (planToUpdate) {
+            setQualification(planToUpdate.qualificationId);
+            setTerm(planToUpdate.studyingTermId);
+            setBase(planToUpdate.baseId);
+            setStep(planToUpdate.stepId);
+            setCipher(planToUpdate.planCipherId);
+            setForm(planToUpdate.studyingFormId);
+            setYear(planToUpdate.admissionYear?.replace("T00:00:00", ""));
+            setGroupNum(planToUpdate.numberOfGroup);
+            setStudentNum(planToUpdate.numberOfStudent);
+            setSemesterCheck([...Array(planToUpdate.numberOfSemester).keys()].map((value_, index_) => ({
+                isCheck: true,
+                key: value_ + 1,
+                value: value_ + 1,
+            })))
+        }
+    }, [planToUpdate])
+
+    useEffect(() => {
+        clearStates();
+    }, [])
+
+    const clearStates = () => {
+        setQualification('');
+        setTerm('');
+        setBase('');
+        setStep('');
+        setCipher('');
+        setForm('');
+        setYear('');
+        setGroupNum('');
+        setStudentNum('');
+        setSemesterCheck([])
+    }
 
     const createFllPlanInfo = (e) => {
-        // e.preventDefault();
-        planInfo.numberOfSemester = semesterCheck.length;
-        let day = planInfo.admissionYear.split('T');
+        e.preventDefault();
+        let day = year.split('T');
+        let planId = planToUpdate ? planToUpdate.planId : null
         const fullPlan = {
-            ...planInfo, admissionYear: day[0] + 'T00:00:00'
+            id: planId,
+            rector: "rector",
+            qualification: { id: qualification },
+            studyingTerm: { id: term },
+            base: { id: base },
+            step: { id: step },
+            planCipher: { id: cipher },
+            studyingForm: { id: form },
+            admissionYear: day[0] + 'T00:00:00',
+            numberOfGroup: groupNum,
+            numberOfStudent: studentNum,
+            numberOfSemester: semesterCheck.length
         }
         onCreate(fullPlan);
-
-        console.log("setInit ")
-        console.log(initVal)
-        setPlanInfo({ ...initVal });
+        clearStates();
     }
-
-    const setValue = (data) => {
-        setPlanInfo((planInfo) => ({
-            ...planInfo, ...data
-        }))
-    }
-
-    const baseSet = (baseId) => {
-        setBase(baseId);
-        planInfo.base.id = baseId;
-    }
-
-    const termSet = (termId) => {
-        setTerm(termId);
-        planInfo.studyingTerm.id = termId
-    };
-    const stepSet = (stepId) => {
-        setStep(stepId);
-        planInfo.step.id = stepId
-    };
-
-    const cipherSet = (cipherId) => {
-        setCipher(cipherId);
-        planInfo.planCipher.id = cipherId
-    };
-
-    const formSet = (formId) => {
-        setForm(formId);
-        planInfo.studyingForm.id = formId
-    };
-
-    const rectorSet = (rectorId) => {
-        setRector(rectorId);
-        planInfo.rector.id = rectorId;
-    };
-
-    const qualificationSet = (qualificationId) => {
-        setQualification(qualificationId);
-        planInfo.qualification.id = qualificationId;
-    };
 
     const setSemester = (semester) => {
         const checkSem = document.getElementById(semester);
         if (checkSem.checked) {
-            setSemesterCheck([...semesterCheck, { key: semester, value: semester }])
+            setSemesterCheck([...semesterCheck, { key: semester, value: semester, isCheck: true }])
         } else {
             setSemesterCheck(_sem => [..._sem.filter(({ key }) => key !== semester)])
         }
     }
-
-    console.log(initVal)
 
     return (
         <div className="container">
@@ -112,7 +103,7 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <label>Кваліфікація</label>
                 <MySelect
                     value={qualification}
-                    onChange={qualificationSet}
+                    onChange={setQualification}
                     defaultValue="Кваліфікація"
                     options={qualificationList} />
             </div>
@@ -121,7 +112,7 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <label>Термін навчання</label>
                 <MySelect
                     value={term}
-                    onChange={termSet}
+                    onChange={setTerm}
                     defaultValue="Термін навчання"
                     options={studyingTermList} />
             </div>
@@ -130,7 +121,7 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <label>На основі</label>
                 <MySelect
                     value={base}
-                    onChange={baseSet}
+                    onChange={setBase}
                     defaultValue="На основі"
                     options={baseList} />
             </div>
@@ -139,7 +130,7 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <label>Підготовки</label>
                 <MySelect
                     value={step}
-                    onChange={stepSet}
+                    onChange={setStep}
                     defaultValue="Підготовки"
                     options={stepList} />
             </div>
@@ -148,7 +139,7 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <label>Шифр</label>
                 <MySelect
                     value={cipher}
-                    onChange={cipherSet}
+                    onChange={setCipher}
                     defaultValue="Шифр"
                     options={cipherList} />
             </div>
@@ -157,7 +148,7 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <label>Форма навчання</label>
                 <MySelect
                     value={form}
-                    onChange={formSet}
+                    onChange={setForm}
                     defaultValue="Форма навчання"
                     options={studyingFormList} />
             </div>
@@ -166,8 +157,9 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <label>Год набора</label>
                 <input
                     type="date"
-                    value={planInfo.admissionYear.replace('T00:00', '')}
-                    onChange={e => setValue({ admissionYear: e.target.value })}
+                    value={year}
+                    // value={planInfo?.admissionYear.replace('T00:00', '')}
+                    onChange={e => setYear(e.target.value)}
                     className="form-control" />
             </div>
 
@@ -175,8 +167,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <div className="form-group" style={{ flex: 1, marginInline: 2 }}>
                     <label>Кількість груп</label>
                     <MyInputValidator
-                        value={planInfo.numberOfGroup}
-                        onText={text => setValue({ numberOfGroup: text })}
+                        value={groupNum}
+                        onText={(text) => setGroupNum(text)}
                         name="firstName"
                         placeholder="Кількість груп"
                         className="form-control"
@@ -189,8 +181,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <div className="form-group" style={{ flex: 1, marginInline: 2 }}>
                     <label>Кількість студентів</label>
                     <MyInputValidator
-                        value={planInfo.numberOfStudent}
-                        onText={(text) => setValue({ numberOfStudent: text })}
+                        value={studentNum}
+                        onText={(text) => setStudentNum(text)}
                         name="firstName"
                         placeholder="Кількість студентів"
                         className="form-control"
@@ -211,7 +203,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                             className="form-check-input"
                             type="checkbox"
                             id="1"
-                            onClick={() => { setSemester(1) }} />
+                            checked={semesterCheck[0]?.isCheck}
+                            onChange={() => { setSemester(1) }} />
                         <label className="form-check-label">1</label>
                     </div>
 
@@ -220,7 +213,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                             className="form-check-input"
                             type="checkbox"
                             id="2"
-                            onClick={() => setSemester(2)} />
+                            checked={semesterCheck[1]?.isCheck}
+                            onChange={() => setSemester(2)} />
                         <label className="form-check-label">2</label>
                     </div>
 
@@ -229,7 +223,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                             className="form-check-input"
                             type="checkbox"
                             id="3"
-                            onClick={() => setSemester(3)} />
+                            checked={semesterCheck[2]?.isCheck}
+                            onChange={() => setSemester(3)} />
                         <label className="form-check-label">3</label>
                     </div>
 
@@ -238,7 +233,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                             className="form-check-input"
                             type="checkbox"
                             id="4"
-                            onClick={() => { setSemester(4) }} />
+                            checked={semesterCheck[3]?.isCheck}
+                            onChange={() => { setSemester(4) }} />
                         <label className="form-check-label">4</label>
                     </div>
 
@@ -247,7 +243,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                             className="form-check-input"
                             type="checkbox"
                             id="5"
-                            onClick={() => { setSemester(5) }} />
+                            checked={semesterCheck[4]?.isCheck}
+                            onChange={() => { setSemester(5) }} />
                         <label className="form-check-label">5</label>
                     </div>
 
@@ -256,7 +253,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                             className="form-check-input"
                             type="checkbox"
                             id="6"
-                            onClick={() => { setSemester(6) }} />
+                            checked={semesterCheck[5]?.isCheck}
+                            onChange={() => { setSemester(6) }} />
                         <label className="form-check-label">6</label>
                     </div>
 
@@ -265,7 +263,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                             className="form-check-input"
                             type="checkbox"
                             id="7"
-                            onClick={() => { setSemester(7) }} />
+                            checked={semesterCheck[6]?.isCheck}
+                            onChange={() => { setSemester(7) }} />
                         <label className="form-check-label">7</label>
                     </div>
 
@@ -274,7 +273,8 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                             className="form-check-input"
                             type="checkbox"
                             id="8"
-                            onClick={() => { setSemester(8) }} />
+                            checked={semesterCheck[7]?.isCheck}
+                            onChange={() => { setSemester(8) }} />
                         <label className="form-check-label">8</label>
                     </div>
                 </div>
@@ -283,7 +283,10 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
 
             <div className={btnClass}>
                 <button className="btn btn-success" style={{ margin: "5px" }} onClick={createFllPlanInfo}>Save</button>
-                <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={onCancel}>Cancel</button>
+                <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => {
+                    clearStates();
+                    onCancel()
+                }}>Cancel</button>
             </div>
         </div >
     );

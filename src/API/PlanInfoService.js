@@ -1,7 +1,10 @@
-const { getPlanInfoListUrl, savePlanUrl, getSemesterNumUrl, saveWeekPlanUrl, getDisciplineByPlanUrl, getWeekByPlanIdUrl, getDisciplineByIdUrl, saveDisciplineUrl } = require("./url");
+const { getPlanInfoListUrl, savePlanUrl, getSemesterNumUrl, saveWeekPlanUrl, getDisciplineByPlanUrl, getWeekByPlanIdUrl, getDisciplineByIdUrl, saveDisciplineUrl, getPlanInfoByIdUrl } = require("./url");
 
 export const getPlanList = () => fetch(getPlanInfoListUrl)
     .then(resp => resp.json());
+
+export const getPlanById = (id) => fetch(getPlanInfoByIdUrl(id))
+    .then(resp => resp.json())
 
 export const savePlanInfo = (planInfo) => fetch(savePlanUrl, {
     method: 'POST',

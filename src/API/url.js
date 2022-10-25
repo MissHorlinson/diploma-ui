@@ -24,6 +24,7 @@ export const saveDisciplineUrl = `/discipline/saveFullData`;
 export const getPlanInfoListUrl = `/planInfo/getAll`;
 export const savePlanUrl = `/planInfo/save`;
 export const getSemesterNumUrl = `/planInfo/getSemesterNum/`;
+export const getPlanInfoByIdUrl = (id) => `/planInfo/getById/${id}`;
 
 export const saveWeekPlanUrl = `/weekPlan/save`;
 export const getWeekByPlanIdUrl = (id) => `/weekPlan/getByPlan/${id}`;

@@ -3,20 +3,10 @@ import React, { useEffect, useState } from "react";
 import MyInputValidator from "../UI/MyInputValdator";
 import MySelect from "../UI/MySelect";
 
-const disciplineInit = {
-    subjectName: { id: '' },
-    disciplineType: { id: '' },
-    department: { id: '' },
-    semester: '',
-    cipher: '',
-    disciplineNum: '',
-    disciplineSubNum: '',
-    plan: { id: '' },
-    reporting: { disciplineReportingForm: { id: 2 } },
-    auditoryHoursList: [{ disciplineForm: { id: '' }, hoursNum: '' }],
-    independentHours: { hoursNum: '' },
-    personalTaskList: [{ personalTaskForm: { id: '' } }]
-}
+
+import PersonalTaskItem from "../PersonalTaskItem";
+import AuditoryHourItem from "../AuditoryHourItem";
+
 
 const DisciplineForm = ({
     disciplineTypeList,
@@ -31,20 +21,47 @@ const DisciplineForm = ({
     onCancel,
     onCreate
 }) => {
-
-    const [discipline, setDiscipline] = useState(disciplineInit)
+    const [subjectName, setSubjectName] = useState('');
+    const [disciplineType, setDisciplineType] = useState('');
+    const [department, setDepartment] = useState('');
+    const [semester, setSemester] = useState('');
+    const [cipher, setCipher] = useState('');
     const [disciplineFullNum, setDisciplineFullNum] = useState('');
+    const [reporting, setReporting] = useState(2);
+    const [independentHours, setIndependentHours] = useState('');
+    const [personalTasks, setPersonalTasks] = useState([]);
+    const [auditoryHours, setAuditoryHours] = useState([]);
+
+    const clearForm = () => {
+        setSubjectName('');
+        setDisciplineType('');
+        setDepartment('');
+        setSemester('');
+        setCipher('');
+        setDisciplineFullNum('');
+        setReporting(2);
+        setIndependentHours('');
+        setPersonalTasks([]);
+        setAuditoryHours([]);
+    }
 
     useEffect(() => {
         if (disciplineForUpdate) {
-            setDiscipline((old_) => ({
-                ...old_, ...disciplineForUpdate
-            }));
-            setDisciplineFullNum(disciplineForUpdate.disciplineNum)
-        } else
-            console.log("no need to update")
+            setSubjectName(disciplineForUpdate.subjectNameId);
+            setDisciplineType(disciplineForUpdate.disciplineTypeId);
+            setDepartment(disciplineForUpdate.departmentId);
+            setSemester(disciplineForUpdate.semester);
+            setCipher(disciplineForUpdate.cipher);
+            setDisciplineFullNum(disciplineForUpdate.disciplineNum);
+            setReporting(2);
+            setIndependentHours(disciplineForUpdate.independentHours);
+            setPersonalTasks(disciplineForUpdate.personalTaskList);
+            setAuditoryHours(disciplineForUpdate.auditoryHoursList);
+        }
+        else {
+            clearForm();
+        }
     }, [disciplineForUpdate]);
-
 
     const semesterList = [...Array(semesterNum).keys()].map((item) => (
         {
@@ -53,80 +70,93 @@ const DisciplineForm = ({
         }
     ))
 
-    const setAuditoryHours = (index, val, key) => {
-        console.log(disciplineInit)
-
-        const auditoryList = discipline.auditoryHoursList;
-        let oldValue = auditoryList[index];
+    const setAuditory = (index, val, key) => {
+        let oldValue = auditoryHours[index];
         let newValue;
         if (key == "disciplineForm") {
             newValue = { ...oldValue, disciplineForm: { id: val } }
         } else if (key == "hoursNum") {
             newValue = { ...oldValue, hoursNum: val }
         }
-        auditoryList[index] = newValue
-        setValue({ auditoryHoursList: auditoryList })
-
-        console.log(disciplineInit)
+        auditoryHours[index] = newValue
+        setAuditoryHours(auditoryHours)
     }
 
     const setPersonalTask = (val, index) => {
-        const taskList = discipline.personalTaskList;
-        let oldValue = taskList[index];
+        console.log(val, index)
         let newValue = { personalTaskForm: { id: val } }
-        taskList[index] = newValue;
-        setValue({ personalTaskList: taskList })
+        personalTasks[index] = newValue;
+        setPersonalTasks(personalTasks)
     }
 
-
     const addAuditoryHours = () => {
-        discipline.auditoryHoursList.push({
-            disciplineForm: { id: '' },
-            hoursNum: ''
-        })
-        setValue({ auditoryHoursList: discipline.auditoryHoursList })
+        setAuditoryHours((hours) => [...hours, {}]);
     }
 
     const addPersonalTask = () => {
-        discipline.personalTaskList.push({ personalTaskForm: { id: '' } })
-        setValue({ personalTaskList: discipline.personalTaskList })
-    }
-
-    const setValue = (data) => {
-        setDiscipline(((old_) => ({
-            ...old_, ...data
-        })))
+        setPersonalTasks((tasks) => [...tasks, {}]);
     }
 
     const saveDiscipline = (e) => {
         e.preventDefault();
-
+        console.log(disciplineFullNum)
         let num = 0;
         let subNum = 0;
-
         if (disciplineFullNum.includes(".")) {
             const numArray = disciplineFullNum.split(".");
             num = numArray[0];
             subNum = numArray[1];
-        } else {
-            num = disciplineFullNum;
         }
 
-        const finaldiscipline = { ...discipline, disciplineNum: num, disciplineSubNum: subNum }
+        let auditoryH;
+        let personalT;
+        let disciplineId = null;
+
+        if (disciplineForUpdate) {
+            disciplineId = disciplineForUpdate.id;
+            auditoryH = auditoryHours.map((item) => ({
+                disciplineForm: { id: item.disciplineFormId },
+                hoursNum: item.hoursNum
+            }))
+
+            personalT = personalTasks.map((item) => ({
+                personalTaskForm: { id: item.personalTaskFormId }
+            }))
+        } else {
+            auditoryH = auditoryHours;
+            personalT = personalTasks;
+        }
+
+        const finaldiscipline = {
+            id: disciplineId,
+            subjectName: { id: subjectName },
+            disciplineType: { id: disciplineType },
+            department: { id: department },
+            semester: semester,
+            cipher: cipher,
+            disciplineNum: num,
+            disciplineSubNum: subNum,
+            reporting: { id: reporting },
+            independentHours: { hoursNum: independentHours },
+            auditoryHoursList: auditoryH,
+            personalTaskList: personalT
+        }
         onCreate(finaldiscipline);
-        setDisciplineFullNum('');
-        setDiscipline({ ...disciplineInit, personalTaskList: [{}], auditoryHoursList: [{}] });
+        // clearForm();
     }
 
-    console.log(discipline)
+    const cancelBtn = () => {
+        // clearForm();
+        onCancel()
+    }
 
     return (
         <div className="container">
             <div className="form-group">
                 <label>Тип дисциплины</label>
                 <MySelect
-                    value={discipline.disciplineType?.id}
-                    onChange={(type) => setValue({ disciplineType: { id: type } })}
+                    value={disciplineType}
+                    onChange={(type) => setDisciplineType(type)}
                     defaultValue="Тип дисциплины"
                     options={disciplineTypeList} />
             </div>
@@ -134,8 +164,8 @@ const DisciplineForm = ({
             <div className="form-group">
                 <label>Шифр</label>
                 <MyInputValidator
-                    value={discipline.cipher}
-                    onText={text => setValue({ cipher: text })}
+                    value={cipher}
+                    onText={text => setCipher(text)}
                     placeholder="Шифр"
                     className="form-control"
                     check="[A-Z][a-z]*$" />
@@ -147,7 +177,6 @@ const DisciplineForm = ({
             <div className="form-group">
                 <label>Номер</label>
                 <MyInputValidator
-                    // value={discipline.disciplineNum}
                     value={disciplineFullNum}
                     onText={(text) => setDisciplineFullNum(text)}
                     placeholder="Номер"
@@ -161,8 +190,8 @@ const DisciplineForm = ({
             <div className="form-group">
                 <label>Название дисциплины</label>
                 <MySelect
-                    value={discipline.subjectName?.id}
-                    onChange={type => setValue({ subjectName: { id: type } })}
+                    value={subjectName}
+                    onChange={type => setSubjectName(type)}
                     defaultValue="Название дисциплины"
                     options={subjectNameList} />
             </div>
@@ -170,8 +199,8 @@ const DisciplineForm = ({
             <div className="form-group">
                 <label>Кафедра</label>
                 <MySelect
-                    value={discipline.department?.id}
-                    onChange={(type) => setValue({ department: { id: type } })}
+                    value={department}
+                    onChange={(type) => setDepartment(type)}
                     defaultValue="Кафедра"
                     options={departmentList} />
             </div>
@@ -180,65 +209,49 @@ const DisciplineForm = ({
             <div className="form-group">
                 <label>Семестр</label>
                 <MySelect
-                    value={discipline.semester}
-                    onChange={(type) => setValue({ semester: type })}
+                    value={semester}
+                    onChange={(type) => setSemester(type)}
                     defaultValue="Семестр"
                     options={semesterList} />
             </div>
             <div className="form-group" >
                 <label>Отчетность</label>
                 <MySelect
-                    value={discipline?.reporting?.disciplineReportingForm?.id}
-                    onChange={(type) => setValue({ reporting: { disciplineReportingForm: { id: type } } })}
+                    value={reporting}
+                    onChange={(type) => setReporting(type)}
                     defaultValue="Отчетность"
                     options={reportingformList} />
             </div>
 
             <label>Аудиторные часы</label>
             {
-                discipline.auditoryHoursList &&
-                discipline.auditoryHoursList.map((item, i) => (
-                    <div style={{ display: "flex", flexDirection: "row" }} key={i}>
-                        <div className="form-group" style={{ margin: 2, flex: 1.5 }}>
-                            <MySelect
-                                value={item.disciplineForm?.id}
-                                onChange={(type) => setAuditoryHours(i, type, "disciplineForm")}
-                                // onChange={(type) => setAuditoryHours('disciplineForm', type, i)}
-                                defaultValue="Аудиторные часы"
-                                options={disciplineFormList} />
-                        </div>
-
-                        <div className="form-group" style={{ margin: 2, flex: 1.25 }}>
-                            <MyInputValidator
-                                value={item.hoursNum}
-                                onText={(text) => setAuditoryHours(i, text, "hoursNum")}
-                                placeholder="Кол-во"
-                                className="form-control"
-                                check="^[0-9]+" />
-                            <div className="invalid-feedback">
-                                Can be only numbers
-                            </div>
-                        </div>
-                        {
-                            discipline.auditoryHoursList.length - 1 !== i ?
-                                <div style={{ flex: 0.29 }}></div>
-
-                                :
-                                <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.25 }}>
-                                    <img src={require(`../../icon/plusIcon.png`)} alt="+" onClick={() => addAuditoryHours()} />
-                                </button>
-                        }
-
+                auditoryHours.length > 0 ? auditoryHours.map((item, i) => (
+                    <div key={i}>
+                        <AuditoryHourItem
+                            item={item}
+                            index={i}
+                            disciplineFormList={disciplineFormList}
+                            setAuditory={setAuditory}
+                            addAuditoryHours={addAuditoryHours}
+                            isLast={auditoryHours.length - 1 === i} />
                     </div>
                 ))
+                    :
+                    <AuditoryHourItem
+                        item={0}
+                        index={0}
+                        disciplineFormList={disciplineFormList}
+                        setAuditory={setAuditory}
+                        addAuditoryHours={addAuditoryHours}
+                        isLast={true} />
             }
 
 
             <div className="form-group">
                 <label>Самостоятельные часы</label>
                 <MyInputValidator
-                    value={discipline.independentHours?.hoursNum}
-                    onText={text => setValue({ independentHours: { hoursNum: text } })}
+                    value={independentHours}
+                    onText={text => setIndependentHours(text)}
                     placeholder="Самостоятельные часы"
                     className="form-control"
                     check="^[0-9]+" />
@@ -250,41 +263,32 @@ const DisciplineForm = ({
 
             <label>Индивидуальное задание</label>
             {
-                discipline.personalTaskList &&
-                discipline.personalTaskList.map((item, i) => (
-                    <div style={{ display: "flex", flexDirection: "row" }} key={i}>
-                        <div className="form-group" style={{ flex: 2.75 }}>
-                            <MySelect
-                                value={item.personalTaskForm?.id}
-                                onChange={(type) => setPersonalTask(type, i)}
-                                defaultValue="Индивидуальное задание"
-                                options={personalTaskFormList} />
-                        </div>
-                        {
-                            discipline.personalTaskList.length - 1 !== i ?
-                                <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.25 }}>
-                                    <img src={require(`../../icon/checkIcon.png`)} alt="!" />
-                                </button>
-                                :
-                                <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.25 }}>
-                                    <img src={require(`../../icon/plusIcon.png`)} alt="+" onClick={() => addPersonalTask()} />
-                                </button>
-                        }
-
+                personalTasks.length > 0 ? personalTasks.map(({ personalTaskFormId }, i) => (
+                    <div key={i}>
+                        <PersonalTaskItem
+                            item={personalTaskFormId}
+                            index={i}
+                            personalTaskFormList={personalTaskFormList}
+                            setPersonalTask={setPersonalTask}
+                            addPersonalTask={addPersonalTask}
+                            isLast={personalTasks.length - 1 === i} />
                     </div>
-                ))
+                )) :
+                    <div>
+                        <PersonalTaskItem
+                            item={0}
+                            index={0}
+                            personalTaskFormList={personalTaskFormList}
+                            setPersonalTask={setPersonalTask}
+                            addPersonalTask={addPersonalTask}
+                            isLast={true} />
+                    </div>
             }
 
             <div style={{ textAlign: "center", margin: "5px" }}>
                 <button className="btn btn-info" onClick={saveDiscipline}>Save</button>
-                <button className="btn btn-danger" onClick={() => {
-                    setDisciplineFullNum('');
-                    setDiscipline({ ...disciplineInit, personalTaskList: [{}], auditoryHoursList: [{}] });
-                    onCancel()
-                }}>Cancel</button>
+                <button className="btn btn-danger" onClick={() => cancelBtn()}>Cancel</button>
             </div>
-
-
         </div >
     )
 }

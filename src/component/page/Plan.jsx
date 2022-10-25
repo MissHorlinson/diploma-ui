@@ -3,24 +3,24 @@ import { Route, Routes } from "react-router";
 import { Link } from "react-router-dom";
 
 import { useFetching } from "../../hooks/useFetching";
-import { getBase, getCipher, getQualification, getStep, getStudyingForm, getStudyingTerm, getStudyingType } from "../../API/UtilDataService";
-import { getPlanList, savePlanInfo } from "../../API/PlanInfoService";
+import { getBase, getCipher, getQualification, getStep, getStudyingForm, getStudyingTerm } from "../../API/UtilDataService";
+import { getPlanList, savePlanInfo, getPlanById } from "../../API/PlanInfoService";
 
-import PlanInfoForm from "../form/PlanInfoForm";
+
 import MyModal from "../UI/MyModal";
 import Loader from "../UI/Loader";
 import MySearch from "../UI/MySearch";
+
 import AllPlanList from "../list/AllPlanList";
+import PlanInfoForm from "../form/PlanInfoForm";
+
 import WeekForm from "../form/WeekForm";
-import DisciplineForm from "../form/DisciplineForm";
-import PlanDisciplineList from "../list/PlanDisciplineList";
 import Discipline from "./Discipline";
 
 
-
 const Plan = () => {
-
     const [planList, setPlanList] = useState([]);
+    const [planToUpdate, setPlanToUpdate] = useState();
 
     const [baseList, setBaseList] = useState([]);
     const [cipherList, setCipherList] = useState([]);
@@ -29,14 +29,11 @@ const Plan = () => {
     const [studyingFormList, setStudyingFormList] = useState([]);
     const [studyingTermList, setStudyingTermList] = useState([]);
 
-    const [studyingTypeList, setStudyingTypeList] = useState([]);
-
     const [modal, setModal] = useState(false);
     const [btnClass, setBtnClass] = useState('updateControlBtn');
     const [filter, setFilter] = useState({ query: '' });
 
     const [fetchData, isListLoading, listError] = useFetching(async () => {
-
         getBase().then((base) => {
             setBaseList(base);
         });
@@ -55,10 +52,6 @@ const Plan = () => {
         getStudyingTerm().then((studyingTerm) => {
             setStudyingTermList(studyingTerm);
         });
-        getStudyingType().then((studyingType) => {
-            setStudyingTypeList(studyingType);
-        });
-
         getPlanList().then((plan) => {
             setPlanList(plan)
         })
@@ -69,17 +62,26 @@ const Plan = () => {
     }, []);
 
     const savePlan = (planInfo) => {
+        console.log(planInfo)
+        console.log(planList)
         savePlanInfo(planInfo).then((resp_) => {
-            let objIndex = planList.findIndex((obj) => obj.id === resp_.id)
+            console.log(resp_)
+            let objIndex = planList.findIndex((obj) => obj.planId === resp_.planId)
             if (objIndex === -1) {
-                setPlanList([...planList, resp_]);
-                // .sort((a, b) => a.id.localeCompare(b.id))
+                setPlanList([...planList, resp_].sort((a, b) => a.planId - b.planId));
             } else {
                 planList[objIndex] = resp_;
-                setPlanList([...planList]);
+                setPlanList([...planList].sort((a, b) => a.planId - b.planId));
             }
             setModal(false)
         })
+    }
+
+    const getForUpdate = (planId) => {
+        getPlanById(planId).then((resp_) =>
+            setPlanToUpdate(resp_),
+            setModal(true)
+        );
     }
 
     return (
@@ -97,6 +99,7 @@ const Plan = () => {
                                 studyingFormList={studyingFormList}
                                 stepList={stepList}
                                 btnClass={btnClass}
+                                planToUpdate={planToUpdate}
                                 onCancel={() => setModal(false)}
                                 onCreate={savePlan} />
                         </MyModal>
@@ -110,7 +113,7 @@ const Plan = () => {
                     : */}
                         <div>
                             <MySearch filter={filter} setFilter={setFilter} />
-                            <AllPlanList planList={planList} />
+                            <AllPlanList planList={planList} onUpdate={getForUpdate} />
                         </div>
                         {/*  } */}
                     </>

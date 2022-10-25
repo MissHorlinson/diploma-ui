@@ -49,19 +49,18 @@ const Discipline = () => {
         delete data.disciplineFormId;
         data.auditoryHoursList.map((item) => delete item.disciplineFormId)
         console.log(JSON.stringify(data));
-        // saveDisciplineData(data).then((resp_) => {
-        //     console.log(resp_)
-        //     let objIndex = disciplineList.findIndex((obj) => obj.id === resp_.id);
-        //     if (objIndex === -1) {
-        //         setDisciplineList([...disciplineList, resp_]);
-        //         // .sort((a, b) => a.id.localeCompare(b.id))
-        //     } else {
-        //         disciplineList[objIndex] = resp_;
-        //         setDisciplineList([...disciplineList]);
-        //     }
-        //     setModal(false);
-        // })
-        setModal(false);
+        saveDisciplineData(data).then((resp_) => {
+            console.log(resp_)
+            let objIndex = disciplineList.findIndex((obj) => obj.id === resp_.id);
+            if (objIndex === -1) {
+                setDisciplineList([...disciplineList, resp_]);
+                // .sort((a, b) => a.id.localeCompare(b.id))
+            } else {
+                disciplineList[objIndex] = resp_;
+                setDisciplineList([...disciplineList]);
+            }
+            setModal(false);
+        });
     }
 
     const getForEdit = (id) => {
@@ -73,7 +72,7 @@ const Discipline = () => {
 
     return (
         <div className="container">
-            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Add Discipline</button>
+            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => { setDisciplineForUpdate(null); setModal(true) }}>Add Discipline</button>
             <MyModal visible={modal} setVisible={setModal}>
                 <DisciplineForm
                     disciplineTypeList={disciplineTypeList}

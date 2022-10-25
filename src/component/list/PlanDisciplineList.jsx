@@ -25,24 +25,24 @@ const PlanDisciplineList = ({ disciplineList, onUpdate }) => {
                         <div className="bodyRow" key={item.id}>
                             <div className="bodyItem text-center">{item.cipher}</div>
                             <div className="bodyItem text-center">{item.disciplineNum}</div>
-                            <div className="bodyDoubleItem">{item.subjectName?.name}</div>
-                            <div className="bodyItem text-center">{item.department?.abbreviation}</div>
+                            <div className="bodyDoubleItem">{item.subjectName}</div>
+                            <div className="bodyItem text-center">{item.departmentAbr}</div>
                             <div className="bodyItem text-center">{item.semester}</div>
-                            <div className="bodyItem text-center">{item.reporting?.disciplineReportingForm.name}</div>
+                            <div className="bodyItem text-center">{item.reporting}</div>
                             <div className="bodyDoubleItem">
                                 {
                                     item.auditoryHoursList &&
                                     item.auditoryHoursList.map(({ disciplineForm, hoursNum }, i) => (
-                                        <div key={i}>{disciplineForm?.name}: {hoursNum}</div>
+                                        <div key={i}>{disciplineForm}: {hoursNum}</div>
                                     ))
                                 }
                             </div>
-                            <div className="bodyDoubleItem text-center">{item.independentHours !== null ? item.independentHours?.hoursNum : 0}</div>
+                            <div className="bodyDoubleItem text-center">{item.independentHours !== null ? item.independentHours : 0}</div>
                             <div className="bodyDoubleItem">
                                 {
                                     item.personalTaskList &&
                                     item.personalTaskList.map(({ personalTaskForm }, i) => (
-                                        <div key={i}>{personalTaskForm?.name}</div>
+                                        <div key={i}>{personalTaskForm}</div>
                                     ))
                                 }
                             </div>

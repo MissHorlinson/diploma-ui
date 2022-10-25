@@ -22,9 +22,11 @@ const WeekForm = () => {
     const { planId } = useParams();
 
     const [studuingTypeList, setStuduingTypeList] = useState([]);
+    const [semesterNum, setSemesterNum] = useState([]);
+
+
     const [fullWeeksPlanList, setFullWeeksPlanList] = useState([]);
 
-    const [semesterNum, setSemesterNum] = useState([]);
 
     const [fetchUtilData, isListLoading, listError] = useFetching(() => {
         getStudyingType().then((types) => setStuduingTypeList(types));
@@ -33,37 +35,41 @@ const WeekForm = () => {
         let fullPlan = []
 
         getWeekByPlanId(planId).then((week) => {
-            setFullWeeksPlanList(week)
+            // setFullWeeksPlanList(week)
             // console.log(week.length);
-            // weekPlanList = week;
-        });
-        getSemesterNum(planId).then((num) => setSemesterNum([...Array(num).keys()]))
-        // .then(() =>
-        //     getSemesterNum(planId).then((num) => {
-        //         if (weekPlanList.length === 0) {
-        //             for (let i = 1; i <= num; i++) {
-        //                 fullPlan = [{ ...initVal, weekPlanInfo: { id: planId }, }]
-        //                 // fullPlan.push({ semester: i, weeks: [{ ...initVal, weekPlanInfo: { id: planId }, needSave: false }] })
-        //                 // fullPlan.push({ semester: i, weeks: [{}] });
-        //             }
-        //         } else {
-        //             for (let i = 1; i <= num; i++) {
+            weekPlanList = week;
 
-        //                 // const weeks_ = weekPlanList.filter(({ semester }) => semester === i);
-        //                 // weeks_.length > 0 ? fullPlan.push({ semester: i, weeks: weeks_ }) : fullPlan.push({ semester: i, weeks: [{}] });
-        //                 // weeks_.length > 0 ? fullPlan.push({ semester: i, weeks: weeks_ }) : fullPlan.push({ semester: i, weeks: [{ ...initVal, weekPlanInfo: { id: planId }, needSave: false }] });
-        //             }
-        //         }
-        //         setFullWeeksPlanList(fullPlan)
-        //     })
-        // )
+            console.log(weekPlanList)
+        })
+            // getSemesterNum(planId).then((num) => setSemesterNum([...Array(num).keys()]))
+            .then(() =>
+                getSemesterNum(planId).then((num) => {
+                    // if (weekPlanList.length === 0) {
+                    //     for (let i = 1; i <= num; i++) {
+                    //         fullPlan = [{ ...initVal, weekPlanInfo: { id: planId }, }]
+                    //         // fullPlan.push({ semester: i, weeks: [{ ...initVal, weekPlanInfo: { id: planId }, needSave: false }] })
+                    //         // fullPlan.push({ semester: i, weeks: [{}] });
+                    //     }
+                    // } else {
+                    for (let i = 1; i <= num; i++) {
+
+                        const weeks_ = weekPlanList.filter(({ semester }) => semester === i);
+                        weeks_.length > 0 ? fullPlan.push({ semester: i, weeks: weeks_ }) : fullPlan.push({ semester: i, weeks: [{}] });
+                        // weeks_.length > 0 ? fullPlan.push({ semester: i, weeks: weeks_ }) : fullPlan.push({ semester: i, weeks: [{ ...initVal, weekPlanInfo: { id: planId }, needSave: false }] });
+                    }
+
+                    console.log(fullPlan)
+                    // }
+                    setFullWeeksPlanList(fullPlan)
+                })
+            )
     })
 
     useEffect(() => {
         fetchUtilData();
     }, []);
 
-    console.log(fullWeeksPlanList, semesterNum);
+    // console.log(fullWeeksPlanList, semesterNum);
 
     const addWeek = (plan, sem) => {
 
@@ -93,12 +99,12 @@ const WeekForm = () => {
                 fullWeeksPlanList &&
                 fullWeeksPlanList.map((item, i) => (
                     <>
-                        <WeekFormItem weeks={fullWeeksPlanList.filter(({ semester }) => semester === i + 1)} studuingTypeList={studuingTypeList} onAdd={addWeek} />
-                        {/* <div style={{ textAlign: "center" }}>
-                            <label>Sem {semester}</label>
+                        {/* <WeekFormItem weeks={fullWeeksPlanList.filter(({ semester }) => semester === i + 1)} studuingTypeList={studuingTypeList} onAdd={addWeek} /> */}
+                        <div style={{ textAlign: "center" }}>
+                            <label>Sem {item.semester}</label>
                         </div>
-                        <WeekFormItem weeks={weeks} studuingTypeList={studuingTypeList} onAdd={addWeek} />
-                        <hr /> */}
+                        <WeekFormItem weeks={item.weeks} studuingTypeList={studuingTypeList} onAdd={addWeek} />
+                        <hr />
                     </>
                 ))
             }
