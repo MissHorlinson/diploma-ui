@@ -11,8 +11,6 @@ const Header = () => {
                         ?
                         <div> */}
                 <Link to="/plan" className="nav-link link-info link_style">Plan</Link>
-                <Link to="/week" className="nav-link link-info link_style">Week</Link>
-                <Link to="/group" className="nav-link link-info link_style">Group</Link>
 
                 {/* </div>
                         :

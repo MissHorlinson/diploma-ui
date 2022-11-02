@@ -10,6 +10,13 @@ import MyModal from "../UI/MyModal";
 import DisciplineForm from "../form/DisciplineForm";
 import PlanDisciplineList from "../list/PlanDisciplineList";
 
+const httpStatusCodes = {
+    200: "OK",
+    400: "BAD_REQUEST",
+    404: "NOT_FOUND",
+    500: "INTERNAL_SERVER ERROR"
+}
+
 const Discipline = () => {
     const { planId } = useParams();
 
@@ -27,9 +34,21 @@ const Discipline = () => {
     const [modal, setModal] = useState(false);
     const [btnClass, setBtnClass] = useState('updateControlBtn');
 
+    const [isError, setIsError] = useState(false)
+    const [errorMsg, setErrorMsg] = useState('')
+
     const [fetchDisciplineData, isListLoading, listError] = useFetching(async () => {
 
-        getDisciplineByPlan(planId).then((disciplines) => setDisciplineList(disciplines));
+        getDisciplineByPlan(planId).then((resp_) => {
+            if (resp_.status !== 200) {
+                setIsError(true);
+                setErrorMsg(httpStatusCodes[resp_.status])
+            } else {
+                setDisciplineList(resp_.body);
+                setIsError(false);
+            }
+        });
+
         getDisciplineType().then((types) => setDisciplineTypeList(types));
         getDisciplineForm().then((forms) => setDisciplineFormList(forms));
         getPersonalTaskForm().then((personal) => setPersonalTaskFormList(personal));
@@ -87,7 +106,14 @@ const Discipline = () => {
                     onCancel={() => setModal(false)}
                     onCreate={saveDiscipline} />
             </MyModal>
-            <PlanDisciplineList disciplineList={disciplineList} onUpdate={getForEdit} />
+
+            {
+                isError ?
+                    <div className="alert alert-primary text-center">{errorMsg}</div>
+                    :
+                    <PlanDisciplineList disciplineList={disciplineList} onUpdate={getForEdit} />
+            }
+
         </div>
     )
 }

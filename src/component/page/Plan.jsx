@@ -18,6 +18,13 @@ import WeekForm from "../form/WeekForm";
 import Discipline from "./Discipline";
 
 
+const httpStatusCodes = {
+    200: "OK",
+    400: "BAD_REQUEST",
+    404: "NOT_FOUND",
+    500: "INTERNAL_SERVER ERROR"
+}
+
 const Plan = () => {
     const [planList, setPlanList] = useState([]);
     const [planToUpdate, setPlanToUpdate] = useState();
@@ -33,7 +40,20 @@ const Plan = () => {
     const [btnClass, setBtnClass] = useState('updateControlBtn');
     const [filter, setFilter] = useState({ query: '' });
 
-    const [fetchData, isListLoading, listError] = useFetching(async () => {
+    const [isError, setIsError] = useState(false)
+    const [errorMsg, setErrorMsg] = useState('')
+
+
+    const [fetchData, isListLoading, listError] = useFetching(() => {
+        getPlanList().then((resp_) => {
+            if (resp_.status !== 200) {
+                setIsError(true);
+                setErrorMsg(httpStatusCodes[resp_.status])
+            } else {
+                setPlanList(resp_.body);
+                setIsError(false);
+            }
+        });
         getBase().then((base) => {
             setBaseList(base);
         });
@@ -52,20 +72,14 @@ const Plan = () => {
         getStudyingTerm().then((studyingTerm) => {
             setStudyingTermList(studyingTerm);
         });
-        getPlanList().then((plan) => {
-            setPlanList(plan)
-        })
-    });
+    })
 
     useEffect(() => {
         fetchData();
     }, []);
 
     const savePlan = (planInfo) => {
-        console.log(planInfo)
-        console.log(planList)
         savePlanInfo(planInfo).then((resp_) => {
-            console.log(resp_)
             let objIndex = planList.findIndex((obj) => obj.planId === resp_.planId)
             if (objIndex === -1) {
                 setPlanList([...planList, resp_].sort((a, b) => a.planId - b.planId));
@@ -107,15 +121,27 @@ const Plan = () => {
 
 
                         <hr />
-                        {/* {
-                isListLoading
-                    ? <Loader />
-                    : */}
-                        <div>
-                            <MySearch filter={filter} setFilter={setFilter} />
-                            <AllPlanList planList={planList} onUpdate={getForUpdate} />
-                        </div>
-                        {/*  } */}
+                        {
+                            isListLoading
+                                ? <Loader />
+                                :
+                                <div>
+                                    <MySearch filter={filter} setFilter={setFilter} />
+                                    {
+                                        isError ?
+                                            <div className="alert alert-primary text-center">{errorMsg}</div>
+                                            :
+                                            <>
+                                                {
+                                                    planList.length > 0 &&
+                                                    <AllPlanList planList={planList} onUpdate={getForUpdate} />
+                                                }
+                                            </>
+
+                                    }
+
+                                </div>
+                        }
                     </>
                 }>
                 </Route>

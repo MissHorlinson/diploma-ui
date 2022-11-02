@@ -12,7 +12,8 @@ const AppRoutes = () => {
                 <Header />
                 <Routes>
                     <Route path="/plan/*" element={<Plan />}></Route>
-                    {/* <Route path="/group" element={<Group />}></Route> */}
+
+                    <Route path="*" element={<Navigate to="/plan" replace />} />
                 </Routes>
             </BrowserRouter>
         </div>
