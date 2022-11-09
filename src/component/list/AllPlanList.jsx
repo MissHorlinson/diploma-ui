@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import "./allPlanList.css";
+import "./listStyle.css";
 
-const AllPlanList = ({ planList, onUpdate }) => {
+const AllPlanList = ({ planList, onUpdate, hasWriteAuthority, hasReadAuthority }) => {
     return (
         <div className="container">
             <div className="titleRow">
@@ -12,8 +12,9 @@ const AllPlanList = ({ planList, onUpdate }) => {
                 <div className="headDoubletemTitle">Rector</div>
                 <div className="headDoubletemTitle">Base</div>
                 <div className="headItemTitle">Cipher</div>
-                <div className="headDoubletemTitle">Detail</div>
-                <div className="headItemTitle"></div>
+                {hasReadAuthority && <div className="headItemTitle">Load</div>}
+                {hasWriteAuthority && <div className="headDoubletemTitle">Detail</div>}
+                {hasWriteAuthority && <div className="headItemTitle"></div>}
             </div>
             <div className="bodyContainer">
                 {
@@ -25,16 +26,28 @@ const AllPlanList = ({ planList, onUpdate }) => {
                             <div className="bodyDoubleItem">{item.rector}</div>
                             <div className="bodyDoubleItem">{item.base}</div>
                             <div className="bodyItem text-center">{item.planCipher}</div>
-                            <div className="bodyDoubleItem text-center">
-                                {item.planId}
-                                <Link className="btn btn-secondary actionBtn" to={"./" + item.planId + "/weeks"}>Weeks</Link>
-                                <Link className="btn btn-secondary actionBtn" to={"./" + item.planId + "/disciplines"}>Discipline</Link>
-                            </div>
-                            <div className="bodyItem text-center">
-                                <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }}>
-                                    <img src={require(`../../icon/editIcon.png`)} style={{ width: "35px", height: "35px" }} alt="edit" onClick={() => onUpdate(item.planId)} />
-                                </button>
-                            </div>
+                            {
+                                hasReadAuthority &&
+                                <div className="bodyItem text-center">
+                                    <button onClick={() => console.log("rty load file")}>Load plan</button>
+                                </div>
+                            }
+                            {
+                                hasWriteAuthority &&
+                                <div className="bodyDoubleItem text-center">
+                                    {item.planId}
+                                    <Link className="btn btn-secondary actionBtn" to={"./" + item.planId + "/weeks"}>Weeks</Link>
+                                    <Link className="btn btn-secondary actionBtn" to={"./" + item.planId + "/disciplines"}>Discipline</Link>
+                                </div>
+                            }
+                            {
+                                hasWriteAuthority &&
+                                <div className="bodyItem text-center">
+                                    <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }}>
+                                        <img src={require(`../../icon/editIcon.png`)} style={{ width: "35px", height: "35px" }} alt="edit" onClick={() => onUpdate(item.planId)} />
+                                    </button>
+                                </div>
+                            }
                         </div>
                     ))
                 }

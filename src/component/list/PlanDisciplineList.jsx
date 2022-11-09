@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./disciplineList.css";
+import "./listStyle.css";
 
 const PlanDisciplineList = ({ disciplineList, onUpdate }) => {
     return (

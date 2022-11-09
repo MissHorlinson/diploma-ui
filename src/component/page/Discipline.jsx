@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 
 import { useParams } from "react-router";
 import { useFetching } from "../../hooks/useFetching";
@@ -17,7 +18,9 @@ const httpStatusCodes = {
     500: "INTERNAL_SERVER ERROR"
 }
 
-const Discipline = () => {
+const Discipline = connect((user) => ({
+    token: user.token
+}))(({ token }) => {
     const { planId } = useParams();
 
     const [disciplineForUpdate, setDisciplineForUpdate] = useState(null);
@@ -39,7 +42,7 @@ const Discipline = () => {
 
     const [fetchDisciplineData, isListLoading, listError] = useFetching(async () => {
 
-        getDisciplineByPlan(planId).then((resp_) => {
+        getDisciplineByPlan(planId, token).then((resp_) => {
             if (resp_.status !== 200) {
                 setIsError(true);
                 setErrorMsg(httpStatusCodes[resp_.status])
@@ -49,13 +52,13 @@ const Discipline = () => {
             }
         });
 
-        getDisciplineType().then((types) => setDisciplineTypeList(types));
-        getDisciplineForm().then((forms) => setDisciplineFormList(forms));
-        getPersonalTaskForm().then((personal) => setPersonalTaskFormList(personal));
-        getReportingForm().then((reporting) => setReportingFormList(reporting));
-        getSubjectName().then((subjects) => setSubjectNameList(subjects));
-        getDepartment().then((departments) => setDepartmentList(departments));
-        getSemesterNum(planId).then((num) => setSemesterNum(num));
+        getDisciplineType(token).then((types) => setDisciplineTypeList(types));
+        getDisciplineForm(token).then((forms) => setDisciplineFormList(forms));
+        getPersonalTaskForm(token).then((personal) => setPersonalTaskFormList(personal));
+        getReportingForm(token).then((reporting) => setReportingFormList(reporting));
+        getSubjectName(token).then((subjects) => setSubjectNameList(subjects));
+        getDepartment(token).then((departments) => setDepartmentList(departments));
+        getSemesterNum(planId, token).then((num) => setSemesterNum(num));
     })
 
     useEffect(() => {
@@ -68,8 +71,7 @@ const Discipline = () => {
         delete data.disciplineFormId;
         data.auditoryHoursList.map((item) => delete item.disciplineFormId)
         console.log(JSON.stringify(data));
-        saveDisciplineData(data).then((resp_) => {
-            console.log(resp_)
+        saveDisciplineData(data, token).then((resp_) => {
             let objIndex = disciplineList.findIndex((obj) => obj.id === resp_.id);
             if (objIndex === -1) {
                 setDisciplineList([...disciplineList, resp_]);
@@ -83,7 +85,7 @@ const Discipline = () => {
     }
 
     const getForEdit = (id) => {
-        getDisciplineById(id).then((data) => {
+        getDisciplineById(id, token).then((data) => {
             setDisciplineForUpdate(data)
         });
         setModal(true);
@@ -116,6 +118,6 @@ const Discipline = () => {
 
         </div>
     )
-}
+});
 
 export default Discipline;

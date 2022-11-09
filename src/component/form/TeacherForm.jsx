@@ -43,7 +43,6 @@ const TeacherForm = ({ onSave, departmentList, teacherToUpdate, btnClass, onCanc
     }
 
     const rankChoise = (rank) => {
-        console.log(rank)
         setAcademicRank(rank);
         teacher.academicRank = rank;
     }

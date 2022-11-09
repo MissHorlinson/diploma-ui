@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 import { useFetching } from "../../hooks/useFetching";
-import { getBase, getCipher, getQualification, getStep, getStudyingForm, getStudyingTerm } from "../../API/UtilDataService";
-import { getPlanList, savePlanInfo, getPlanById } from "../../API/PlanInfoService";
+import {
+    getBase,
+    getCipher,
+    getQualification,
+    getStep,
+    getStudyingForm,
+    getStudyingTerm
+} from "../../API/UtilDataService";
+
+import {
+    getPlanList,
+    savePlanInfo,
+    getPlanById
+} from "../../API/PlanInfoService";
 
 
 import MyModal from "../UI/MyModal";
@@ -25,7 +38,12 @@ const httpStatusCodes = {
     500: "INTERNAL_SERVER ERROR"
 }
 
-const Plan = () => {
+const Plan = connect((user) => ({
+    token: user.token,
+    hasWriteAuthority: user.role < 3,
+    hasReadAuthority: user.role > 3 && user.role < 6
+}))(({ token, hasWriteAuthority, hasReadAuthority }) => {
+
     const [planList, setPlanList] = useState([]);
     const [planToUpdate, setPlanToUpdate] = useState();
 
@@ -45,7 +63,7 @@ const Plan = () => {
 
 
     const [fetchData, isListLoading, listError] = useFetching(() => {
-        getPlanList().then((resp_) => {
+        getPlanList(token).then((resp_) => {
             if (resp_.status !== 200) {
                 setIsError(true);
                 setErrorMsg(httpStatusCodes[resp_.status])
@@ -54,24 +72,26 @@ const Plan = () => {
                 setIsError(false);
             }
         });
-        getBase().then((base) => {
-            setBaseList(base);
-        });
-        getCipher().then((cipher) => {
-            setCipherList(cipher);
-        });
-        getQualification().then((qualification) => {
-            setQualificationList(qualification);
-        });
-        getStep().then((step) => {
-            setStepList(step);
-        });
-        getStudyingForm().then((studyingForm) => {
-            setStudyingFormList(studyingForm);
-        });
-        getStudyingTerm().then((studyingTerm) => {
-            setStudyingTermList(studyingTerm);
-        });
+        if (hasWriteAuthority) {
+            getBase(token).then((base) => {
+                setBaseList(base);
+            });
+            getCipher(token).then((cipher) => {
+                setCipherList(cipher);
+            });
+            getQualification(token).then((qualification) => {
+                setQualificationList(qualification);
+            });
+            getStep(token).then((step) => {
+                setStepList(step);
+            });
+            getStudyingForm(token).then((studyingForm) => {
+                setStudyingFormList(studyingForm);
+            });
+            getStudyingTerm(token).then((studyingTerm) => {
+                setStudyingTermList(studyingTerm);
+            });
+        }
     })
 
     useEffect(() => {
@@ -79,7 +99,7 @@ const Plan = () => {
     }, []);
 
     const savePlan = (planInfo) => {
-        savePlanInfo(planInfo).then((resp_) => {
+        savePlanInfo(planInfo, token).then((resp_) => {
             let objIndex = planList.findIndex((obj) => obj.planId === resp_.planId)
             if (objIndex === -1) {
                 setPlanList([...planList, resp_].sort((a, b) => a.planId - b.planId));
@@ -92,7 +112,7 @@ const Plan = () => {
     }
 
     const getForUpdate = (planId) => {
-        getPlanById(planId).then((resp_) =>
+        getPlanById(planId, token).then((resp_) =>
             setPlanToUpdate(resp_),
             setModal(true)
         );
@@ -103,23 +123,25 @@ const Plan = () => {
             <Routes>
                 <Route path='' element={
                     <>
-                        <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Create Plan</button>
-                        <MyModal visible={modal} setVisible={setModal}>
-                            <PlanInfoForm
-                                qualificationList={qualificationList}
-                                studyingTermList={studyingTermList}
-                                baseList={baseList}
-                                cipherList={cipherList}
-                                studyingFormList={studyingFormList}
-                                stepList={stepList}
-                                btnClass={btnClass}
-                                planToUpdate={planToUpdate}
-                                onCancel={() => setModal(false)}
-                                onCreate={savePlan} />
-                        </MyModal>
-
-
-
+                        {
+                            hasWriteAuthority &&
+                            <>
+                                <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Create Plan</button>
+                                <MyModal visible={modal} setVisible={setModal}>
+                                    <PlanInfoForm
+                                        qualificationList={qualificationList}
+                                        studyingTermList={studyingTermList}
+                                        baseList={baseList}
+                                        cipherList={cipherList}
+                                        studyingFormList={studyingFormList}
+                                        stepList={stepList}
+                                        btnClass={btnClass}
+                                        planToUpdate={planToUpdate}
+                                        onCancel={() => setModal(false)}
+                                        onCreate={savePlan} />
+                                </MyModal>
+                            </>
+                        }
                         <hr />
                         {
                             isListLoading
@@ -134,12 +156,15 @@ const Plan = () => {
                                             <>
                                                 {
                                                     planList.length > 0 &&
-                                                    <AllPlanList planList={planList} onUpdate={getForUpdate} />
+                                                    <AllPlanList
+                                                        planList={planList}
+                                                        onUpdate={getForUpdate}
+                                                        hasWriteAuthority={hasWriteAuthority}
+                                                        hasReadAuthority={hasReadAuthority}
+                                                    />
                                                 }
                                             </>
-
                                     }
-
                                 </div>
                         }
                     </>
@@ -162,6 +187,6 @@ const Plan = () => {
             </Routes>
         </div>
     )
-}
+});
 
 export default Plan;

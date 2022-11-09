@@ -83,7 +83,6 @@ const DisciplineForm = ({
     }
 
     const setPersonalTask = (val, index) => {
-        console.log(val, index)
         let newValue = { personalTaskForm: { id: val } }
         personalTasks[index] = newValue;
         setPersonalTasks(personalTasks)
@@ -99,7 +98,6 @@ const DisciplineForm = ({
 
     const saveDiscipline = (e) => {
         e.preventDefault();
-        console.log(disciplineFullNum)
         let num = 0;
         let subNum = 0;
         if (disciplineFullNum.includes(".")) {

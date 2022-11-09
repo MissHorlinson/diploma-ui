@@ -1,49 +1,129 @@
 const { getRankListUrl, getBaseUrl, getCipherUrl, getDegreeUrl, getDepartmentUrl, getDisciplineFormUrl, getDisciplineTypeUrl, getPersonalTaskFormUrl, getPositionUrl, getQualificationUrl, getReportingFormUrl, getStepUrl, getStudyingFormUrl, getStudyingTermUrl, getStudyingTypeUrl, getSubjectNameUrl } = require("./url");
 
-export const getRankList = () => fetch(getRankListUrl)
+export const getRankList = (token) => fetch(getRankListUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getBase = () => fetch(getBaseUrl)
+export const getBase = (token) => fetch(getBaseUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getCipher = () => fetch(getCipherUrl)
+export const getCipher = (token) => fetch(getCipherUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getDegree = () => fetch(getDegreeUrl)
+export const getDegree = (token) => fetch(getDegreeUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getDepartment = () => fetch(getDepartmentUrl)
+export const getDepartment = (token) => fetch(getDepartmentUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getDisciplineForm = () => fetch(getDisciplineFormUrl)
+export const getDisciplineForm = (token) => fetch(getDisciplineFormUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getDisciplineType = () => fetch(getDisciplineTypeUrl)
+export const getDisciplineType = (token) => fetch(getDisciplineTypeUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getPersonalTaskForm = () => fetch(getPersonalTaskFormUrl)
+export const getPersonalTaskForm = (token) => fetch(getPersonalTaskFormUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getPosition = () => fetch(getPositionUrl)
+export const getPosition = (token) => fetch(getPositionUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getQualification = () => fetch(getQualificationUrl)
+export const getQualification = (token) => fetch(getQualificationUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getReportingForm = () => fetch(getReportingFormUrl)
+export const getReportingForm = (token) => fetch(getReportingFormUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getStep = () => fetch(getStepUrl)
+export const getStep = (token) => fetch(getStepUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getStudyingForm = () => fetch(getStudyingFormUrl)
+export const getStudyingForm = (token) => fetch(getStudyingFormUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getStudyingTerm = () => fetch(getStudyingTermUrl)
+export const getStudyingTerm = (token) => fetch(getStudyingTermUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getStudyingType = () => fetch(getStudyingTypeUrl)
+export const getStudyingType = (token) => fetch(getStudyingTypeUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getSubjectName = () => fetch(getSubjectNameUrl)
+export const getSubjectName = (token) => fetch(getSubjectNameUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());

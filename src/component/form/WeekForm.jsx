@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { connect } from "react-redux";
+
 import { useFetching } from "../../hooks/useFetching";
 
 import { getSemesterNum, saveWeekPlanData, getWeekByPlanId } from "../../API/PlanInfoService";
@@ -17,7 +19,9 @@ const initVal = {
     studyingType: { id: '' }
 }
 
-const WeekForm = () => {
+const WeekForm = connect((user) => ({
+    token: user.token
+}))(({ token }) => {
 
     const { planId } = useParams();
 
@@ -28,8 +32,8 @@ const WeekForm = () => {
 
 
     const [fetchUtilData, isListLoading, listError] = useFetching(() => {
-        getStudyingType().then((types) => setStuduingTypeList(types));
-        getWeekByPlanId(planId).then((week) => {
+        getStudyingType(token).then((types) => setStuduingTypeList(types));
+        getWeekByPlanId(planId, token).then((week) => {
             // setFullWeeksPlanList(week)
             // console.log(week.length);
             // weekPlanList = week;
@@ -38,7 +42,7 @@ const WeekForm = () => {
             setFullWeeksPlanList(week)
             // setFullWeeksPlanList(week.sort((a, b) => a.semester - b.semester))
         });
-        getSemesterNum(planId).then((num) => setSemesterNum(num));
+        getSemesterNum(planId, token).then((num) => setSemesterNum(num));
         // getSemesterNum(planId).then((num) => setSemesterNum([...Array(num).keys()]))
         // .then(() =>
         //     getSemesterNum(planId).then((num) => {
@@ -86,9 +90,8 @@ const WeekForm = () => {
         const forSave = fullWeeksPlanList.filter((item) => item.needSave === true);
         // console.log(forSave)
         const result = forSave.map((item) => delete item.needSave && ({ ...item, weekPlanInfo: { id: planId } }));
-        console.log(result)
         console.log(JSON.stringify(result))
-        saveWeekPlanData(result)
+        saveWeekPlanData(result, token)
     }
 
     const setWeekData = (key, val, index) => {
@@ -150,6 +153,6 @@ const WeekForm = () => {
             </div>
         </div>
     )
-}
+});
 
 export default WeekForm;

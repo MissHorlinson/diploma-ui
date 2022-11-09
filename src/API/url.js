@@ -28,3 +28,8 @@ export const getPlanInfoByIdUrl = (id) => `/planInfo/getById/${id}`;
 
 export const saveWeekPlanUrl = `/weekPlan/save`;
 export const getWeekByPlanIdUrl = (id) => `/weekPlan/getByPlan/${id}`;
+
+export const getGroupListUrl = `/groupInfo/getAll`;
+export const getStudentInGroupUrl = (id) => `/groupInfo/getGroupList/${id}`;
+export const saveGroupUrl = `/groupInfo/saveGroup`;
+export const getGroupByIdUrl = (id) => `/groupInfo/getGroupById/${id}`;

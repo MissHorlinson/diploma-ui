@@ -1,37 +1,58 @@
 const { getPlanInfoListUrl, savePlanUrl, getSemesterNumUrl, saveWeekPlanUrl, getDisciplineByPlanUrl, getWeekByPlanIdUrl, getDisciplineByIdUrl, saveDisciplineUrl, getPlanInfoByIdUrl } = require("./url");
 
-export const getPlanList = () => fetch(getPlanInfoListUrl)
-    .then(resp => {
-        if (resp.ok) {
-            return resp.json().then(data => ({ status: resp.status, body: data }))
-        } else {
-            return { status: resp.status, body: {} }
-        }
-    });
+export const getPlanList = (token) => fetch(getPlanInfoListUrl, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+}).then(resp => {
+    if (resp.ok) {
+        return resp.json().then(data => ({ status: resp.status, body: data }))
+    } else {
+        return { status: resp.status, body: {} }
+    }
+});
 
-export const getPlanById = (id) => fetch(getPlanInfoByIdUrl(id))
+export const getPlanById = (id, token) => fetch(getPlanInfoByIdUrl(id), {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json())
 
-export const savePlanInfo = (planInfo) => fetch(savePlanUrl, {
-    method: 'POST',
+export const savePlanInfo = (planInfo, token) => fetch(savePlanUrl, {
+    method: "POST",
     headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
+        "Authorization": token
     },
     body: JSON.stringify(planInfo)
 }).then(resp => resp.json());
 
-export const getSemesterNum = (id) => fetch(getSemesterNumUrl + id)
+export const getSemesterNum = (id, token) => fetch(getSemesterNumUrl + id, {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const saveWeekPlanData = (weeksPlan) => fetch(saveWeekPlanUrl, {
-    method: 'POST',
+export const saveWeekPlanData = (weeksPlan, token) => fetch(saveWeekPlanUrl, {
+    method: "POST",
     headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
+        "Authorization": token
     },
     body: JSON.stringify(weeksPlan)
 }).then(resp => resp.json());
 
-export const getDisciplineByPlan = (id) => fetch(getDisciplineByPlanUrl(id))
+export const getDisciplineByPlan = (id, token) => fetch(getDisciplineByPlanUrl(id), {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    },
+})
     .then(resp => {
         if (resp.ok) {
             return resp.json().then(data => ({ status: resp.status, body: data }))
@@ -40,16 +61,27 @@ export const getDisciplineByPlan = (id) => fetch(getDisciplineByPlanUrl(id))
         }
     });
 
-export const getWeekByPlanId = (id) => fetch(getWeekByPlanIdUrl(id))
+export const getWeekByPlanId = (id, token) => fetch(getWeekByPlanIdUrl(id), {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json());
 
-export const getDisciplineById = (id) => fetch(getDisciplineByIdUrl(id))
+export const getDisciplineById = (id, token) => fetch(getDisciplineByIdUrl(id), {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
     .then(resp => resp.json())
 
-export const saveDisciplineData = (discipline) => fetch(saveDisciplineUrl, {
-    method: 'POST',
+export const saveDisciplineData = (discipline, token) => fetch(saveDisciplineUrl, {
+    method: "POST",
     headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
+        "Authorization": token
     },
     body: JSON.stringify(discipline)
 }).then(resp => resp.json());
