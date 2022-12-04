@@ -13,7 +13,7 @@ import MySearch from '../UI/MySearch';
 
 import GroupForm from '../form/GroupForm';
 import AllGroupList from '../list/AllGroupList';
-import StudentInGroup from '../list/StudentInGroup';
+import StudentInGroup from './StudentInGroup';
 
 
 const httpStatusCodes = {

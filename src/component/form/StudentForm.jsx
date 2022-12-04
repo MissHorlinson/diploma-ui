@@ -1,79 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import MyInputValidator from '../UI/MyInputValdator';
-import MySelect from "../UI/MySelect";
 
-const initialVal = {
-    firstName: '',
-    secondName: '',
-    lastName: '',
-    passport: '',
-    recordBook: '',
-    birthday: '',
-    email: '',
-    phone: '',
-    groupInfo: { id: '' },
-    degree: ''
-}
 
-const StudentForm = ({ onSave, groupList, studentToUpdate, btnClass, onCancel }) => {
+const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
 
-    const [student, setStudent] = useState(initialVal);
+    const [firstName, setFirstName] = useState('');
+    const [secondName, setSecondName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [passport, setPassport] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [birthday, setBirthday] = useState('');
+    const [recordBook, setRecordBook] = useState('');
 
-    const [degree, setDegree] = useState('');
-    const [groupInfo, setGroupInfo] = useState('');
 
+    const clearStates = () => {
+        setFirstName('');
+        setSecondName('');
+        setLastName('');
+        setPhone('');
+        setPassport('');
+        setEmail('');
+        setBirthday('');
+        setRecordBook('');
+    }
+
+    useEffect(() => {
+        clearStates();
+    }, [])
 
     useEffect(() => {
         if (studentToUpdate) {
-            setStudent((stud) => ({
-                ...stud, ...studentToUpdate
-            }));
-
-            var filter = groupList.filter(function (el) {
-                return el.name === studentToUpdate.group;
-            })
-            //  student.groupInfo.id = filter[0].id;
-            groupSet(studentToUpdate.groupId);
-            degreeChoise(studentToUpdate.degree);
+            setFirstName(studentToUpdate.firstName);
+            setSecondName(studentToUpdate.secondName);
+            setLastName(studentToUpdate.lastName);
+            setPhone(studentToUpdate.phone);
+            setPassport(studentToUpdate.passport);
+            setEmail(studentToUpdate.email);
+            setBirthday(studentToUpdate.birthday?.replace("T00:00", ""));
+            setRecordBook(studentToUpdate.recordBook);
+        } else {
+            clearStates();
         }
     }, [studentToUpdate]);
 
 
-    const degreeChoise = (choise) => {
-        setDegree(choise)
-        student.degree = choise
-    }
-
-    const groupSet = (group) => {
-        setGroupInfo(group);
-        student.groupInfo.id = group;
-    }
-
     const saveStudent = (e) => {
         e.preventDefault();
-        let day = student.birthday.split('T');
-        const newStudent = {
-            ...student, birthday: day[0] + 'T00:00:00'
-        }
-        onSave(newStudent);
-        setStudent({ ...initialVal });
+
+        const student = ({
+            firstName: firstName,
+            secondName: secondName,
+            lastName: lastName,
+            phone: phone,
+            passport: passport,
+            email: email,
+            birthday: birthday + "T00:00:00",
+            recordBook: recordBook
+        });
+
+        onSave(student);
     }
-
-
-    const setValue = (data) => {
-        setStudent((stud) => ({
-            ...stud, ...data
-        }));
-    }
-
 
     return (
         <div className="container">
             <div className="form-group">
                 <label>First Name</label>
                 <MyInputValidator
-                    value={student.firstName}
-                    onText={text => setValue({ firstName: text })}
+                    value={firstName}
+                    onText={text => setFirstName(text)}
                     name="firstName"
                     placeholder="First Name"
                     className="form-control"
@@ -87,8 +82,8 @@ const StudentForm = ({ onSave, groupList, studentToUpdate, btnClass, onCancel })
             <div className="form-group">
                 <label>Second Name</label>
                 <MyInputValidator
-                    value={student.secondName}
-                    onText={text => setValue({ secondName: text })}
+                    value={secondName}
+                    onText={text => setSecondName(text)}
                     name="secondName"
                     placeholder="Second Name"
                     className="form-control"
@@ -102,9 +97,9 @@ const StudentForm = ({ onSave, groupList, studentToUpdate, btnClass, onCancel })
             <div className="form-group">
                 <label>Last Name</label>
                 <MyInputValidator
-                    value={student.lastName}
+                    value={lastName}
                     type="text"
-                    onText={text => setValue({ lastName: text })}
+                    onText={text => setLastName(text)}
                     name="lastName"
                     placeholder="Last Name"
                     className="form-control"
@@ -118,8 +113,8 @@ const StudentForm = ({ onSave, groupList, studentToUpdate, btnClass, onCancel })
             <div className="form-group">
                 <label>Passport</label>
                 <MyInputValidator
-                    value={student.passport}
-                    onText={text => setValue({ passport: text })}
+                    value={passport}
+                    onText={text => setPassport(text)}
                     name="passport"
                     placeholder="passport"
                     className="form-control"
@@ -133,8 +128,8 @@ const StudentForm = ({ onSave, groupList, studentToUpdate, btnClass, onCancel })
             <div className="form-group">
                 <label>Email</label>
                 <MyInputValidator
-                    value={student.email}
-                    onText={text => setValue({ email: text })}
+                    value={email}
+                    onText={text => setEmail(text)}
                     name="email"
                     placeholder="Email"
                     className="form-control"
@@ -148,8 +143,8 @@ const StudentForm = ({ onSave, groupList, studentToUpdate, btnClass, onCancel })
             <div className="form-group">
                 <label>Phone</label>
                 <MyInputValidator
-                    value={student.phone}
-                    onText={text => setValue({ phone: text })}
+                    value={phone}
+                    onText={text => setPhone(text)}
                     name="phone"
                     placeholder="Phone"
                     className="form-control"
@@ -163,8 +158,8 @@ const StudentForm = ({ onSave, groupList, studentToUpdate, btnClass, onCancel })
             <div className="form-group">
                 <label>Record Book</label>
                 <MyInputValidator
-                    value={student.recordBook}
-                    onText={text => setValue({ recordBook: text })}
+                    value={recordBook}
+                    onText={text => setRecordBook(text)}
                     name="recordBook"
                     placeholder="record Book"
                     className="form-control"
@@ -178,36 +173,17 @@ const StudentForm = ({ onSave, groupList, studentToUpdate, btnClass, onCancel })
                 <label>Birthday</label>
                 <input
                     type="date"
-                    value={student.birthday.replace('T00:00', '')}
-                    onChange={e => setValue({ birthday: e.target.value })}
+                    value={birthday}
+                    onChange={e => setBirthday(e.target.value)}
                     className="form-control" />
             </div>
 
-            {/* <div className="form-group">
-                <label>Group</label>
-                <MySelect
-                    value={groupInfo}
-                    onChange={groupSet}
-                    defaultValue="Group"
-                    options={groupList} />
-            </div>
-
-            <div className="form-group">
-                <label>Degree</label>
-                <MySelect
-                    value={degree}
-                    onChange={degreeChoise}
-                    defaultValue="Degree"
-                    options={[
-                        { id: "Bachelor", name: "Bachelor" },
-                        { id: "Master", name: "Master" },
-                        { id: "PhD", name: "PhD" }
-                    ]} />
-            </div> */}
-
             <div className={btnClass}>
                 <button className="btn btn-success" style={{ margin: "5px" }} onClick={saveStudent}>Save</button>
-                <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={onCancel}>Cancel</button>
+                <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => {
+                    clearStates();
+                    onCancel();
+                }}>Cancel</button>
             </div>
         </div>
     );

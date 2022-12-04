@@ -17,9 +17,9 @@ const DisciplineForm = ({
     departmentList,
     semesterNum,
     disciplineForUpdate,
-    btnClass,
     onCancel,
-    onCreate
+    onCreate,
+    saveNewSubjectName
 }) => {
     const [subjectName, setSubjectName] = useState('');
     const [disciplineType, setDisciplineType] = useState('');
@@ -32,6 +32,10 @@ const DisciplineForm = ({
     const [personalTasks, setPersonalTasks] = useState([]);
     const [auditoryHours, setAuditoryHours] = useState([]);
 
+    const [addSubjectNameVisible, setAddSubjectNameVisible] = useState("none");
+    const [subjectNameVisible, setSubjectNameVisible] = useState("contents");
+    const [subjectNameForSave, setSubjectNameForSave] = useState('');
+
     const clearForm = () => {
         setSubjectName('');
         setDisciplineType('');
@@ -43,6 +47,8 @@ const DisciplineForm = ({
         setIndependentHours('');
         setPersonalTasks([]);
         setAuditoryHours([]);
+        setAddSubjectNameVisible('none');
+        setSubjectNameForSave('');
     }
 
     useEffect(() => {
@@ -63,6 +69,8 @@ const DisciplineForm = ({
         }
     }, [disciplineForUpdate]);
 
+    useEffect(() => { clearForm() }, [])
+
     const semesterList = [...Array(semesterNum).keys()].map((item) => (
         {
             id: item + 1,
@@ -74,7 +82,7 @@ const DisciplineForm = ({
         let oldValue = auditoryHours[index];
         let newValue;
         if (key == "disciplineForm") {
-            newValue = { ...oldValue, disciplineForm: { id: val } }
+            newValue = { ...oldValue, disciplineForm: { id: val }, disciplineFormId: val }
         } else if (key == "hoursNum") {
             newValue = { ...oldValue, hoursNum: val }
         }
@@ -83,7 +91,7 @@ const DisciplineForm = ({
     }
 
     const setPersonalTask = (val, index) => {
-        let newValue = { personalTaskForm: { id: val } }
+        let newValue = { personalTaskForm: { id: val }, personalTaskFormId: val }
         personalTasks[index] = newValue;
         setPersonalTasks(personalTasks)
     }
@@ -104,6 +112,8 @@ const DisciplineForm = ({
             const numArray = disciplineFullNum.split(".");
             num = numArray[0];
             subNum = numArray[1];
+        } else {
+            num = disciplineFullNum;
         }
 
         let auditoryH;
@@ -125,6 +135,15 @@ const DisciplineForm = ({
             personalT = personalTasks;
         }
 
+        console.log(reporting)
+        let reporting_ = null;
+        if (reporting > 0) {
+            reporting_ = ({
+                disciplineReportingForm: {
+                    id: reporting
+                }
+            })
+        }
         const finaldiscipline = {
             id: disciplineId,
             subjectName: { id: subjectName },
@@ -134,18 +153,33 @@ const DisciplineForm = ({
             cipher: cipher,
             disciplineNum: num,
             disciplineSubNum: subNum,
-            reporting: { id: reporting },
+            reporting: reporting_,
             independentHours: { hoursNum: independentHours },
             auditoryHoursList: auditoryH,
             personalTaskList: personalT
         }
         onCreate(finaldiscipline);
-        // clearForm();
+        clearForm();
     }
 
     const cancelBtn = () => {
-        // clearForm();
-        onCancel()
+        onCancel();
+    }
+
+    const addSubjectName = () => {
+        console.log("add subj");
+        // setSubjectNameVisible("none");
+        setAddSubjectNameVisible("inline");
+    }
+
+    const saveSubjectName = () => {
+        console.log("save" + subjectNameForSave);
+        // setSubjectNameVisible("inline");
+        setAddSubjectNameVisible("none");
+        const subjectName_ = { name: subjectNameForSave }
+        console.log(JSON.stringify(subjectName_));
+        saveNewSubjectName(subjectName_)
+        setSubjectNameForSave('');
     }
 
     return (
@@ -166,7 +200,7 @@ const DisciplineForm = ({
                     onText={text => setCipher(text)}
                     placeholder="Шифр"
                     className="form-control"
-                    check="[A-Z][a-z]*$" />
+                    check="[А-Я][а-я]*$" />
                 <div className="invalid-feedback">
                     Can be only numbers
                 </div>
@@ -187,11 +221,31 @@ const DisciplineForm = ({
 
             <div className="form-group">
                 <label>Название дисциплины</label>
-                <MySelect
-                    value={subjectName}
-                    onChange={type => setSubjectName(type)}
-                    defaultValue="Название дисциплины"
-                    options={subjectNameList} />
+                {/* <div style={{ display: subjectNameVisible }}> */}
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                    <MySelect
+                        value={subjectName}
+                        onChange={type => setSubjectName(type)}
+                        defaultValue="Название дисциплины"
+                        options={subjectNameList} />
+                    <button style={{ backgroundColor: "transparent", borderColor: "transparent" }}>
+                        <img src={require(`../../icon/plusIcon.png`)} alt="+" onClick={addSubjectName} />
+                    </button>
+                </div>
+                {/* </div> */}
+                <div style={{ display: addSubjectNameVisible }}>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                        <MyInputValidator
+                            value={subjectNameForSave}
+                            onText={text => setSubjectNameForSave(text)}
+                            placeholder="Название предмета"
+                            className="form-control"
+                            check="[a-z A-Z]*$" />
+                        <button style={{ backgroundColor: "transparent", borderColor: "transparent" }}>
+                            <img src={require(`../../icon/checkIcon.png`)} alt="+" onClick={saveSubjectName} />
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div className="form-group">
@@ -285,7 +339,10 @@ const DisciplineForm = ({
 
             <div style={{ textAlign: "center", margin: "5px" }}>
                 <button className="btn btn-info" onClick={saveDiscipline}>Save</button>
-                <button className="btn btn-danger" onClick={() => cancelBtn()}>Cancel</button>
+                <button className="btn btn-danger" onClick={() => {
+                    clearForm();
+                    cancelBtn();
+                }}>Cancel</button>
             </div>
         </div >
     )

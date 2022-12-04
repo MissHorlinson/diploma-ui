@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import LoginPage from './LoginPage';
 import Header from './Header';
+import Footer from "../UI/Footer";
 import Plan from "../page/Plan";
 import Group from "../page/Group";
 
@@ -23,6 +24,7 @@ const AppRoutes = connect((data) => ({
                     <Route path="*" element={<Navigate to="/plan" replace />} />
 
                 </Routes>
+                <Footer />
             </Router>
             :
             <>
@@ -32,6 +34,7 @@ const AppRoutes = connect((data) => ({
                         <Route path="*" element={<Navigate to="/login" replace />}
                         />
                     </Routes>
+                    <Footer />
                 </Router>
             </>
 

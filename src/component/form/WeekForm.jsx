@@ -39,7 +39,12 @@ const WeekForm = connect((user) => ({
             // weekPlanList = week;
 
             // console.log(weekPlanList)
-            setFullWeeksPlanList(week)
+            if (week.length > 0) {
+                setFullWeeksPlanList(week)
+            } else {
+                setFullWeeksPlanList([{}])
+            }
+
             // setFullWeeksPlanList(week.sort((a, b) => a.semester - b.semester))
         });
         getSemesterNum(planId, token).then((num) => setSemesterNum(num));
@@ -78,25 +83,42 @@ const WeekForm = connect((user) => ({
         fetchUtilData();
     }, []);
 
-    // console.log(fullWeeksPlanList, semesterNum);
-
-    const addWeek = (plan, sem) => {
+    const addWeek = () => {
         setFullWeeksPlanList((weeks_) => [...weeks_, {}])
-        // setFullWeeksPlanList(_plans => [..._plans.filter(({ semester }) => semester !== sem), { semester: sem, weeks: [...existngPlan, { ...initVal, weekPlanInfo: { id: planId }, semester: sem }] }].sort((a, b) => a.semester - b.semester))
     }
 
     const saveWeekData = () => {
-        // console.log(fullWeeksPlanList)
         const forSave = fullWeeksPlanList.filter((item) => item.needSave === true);
-        // console.log(forSave)
         const result = forSave.map((item) => delete item.needSave && ({ ...item, weekPlanInfo: { id: planId } }));
         console.log(JSON.stringify(result))
         saveWeekPlanData(result, token)
     }
 
     const setWeekData = (key, val, index) => {
-        const oldWeek = fullWeeksPlanList.find((obj) => obj.id === index)
+        console.log(key, val, index);
+
+        let oldWeekIndex = 0;
         let newWeek;
+        let oldWeek;
+
+        console.log(fullWeeksPlanList)
+
+        // const oldWeek = fullWeeksPlanList.find((obj) => obj.id === index)
+        if (fullWeeksPlanList.length > 0) {
+            console.log(fullWeeksPlanList)
+            oldWeekIndex = fullWeeksPlanList.findIndex((obj, index_) => index_ === index);
+        } else {
+            fullWeeksPlanList[0] = {}
+            console.log(fullWeeksPlanList)
+        }
+
+
+
+        if (oldWeekIndex >= 0) {
+            oldWeek = fullWeeksPlanList[oldWeekIndex];
+        }
+
+
         if (key === 'startWeek') {
             newWeek = { ...oldWeek, startWeek: val, needSave: true }
         } else if (key === 'term') {
@@ -106,11 +128,18 @@ const WeekForm = connect((user) => ({
         } else if (key === 'semester') {
             newWeek = { ...oldWeek, semester: val, needSave: true }
         }
-        setFullWeeksPlanList(_items => [..._items.filter(({ id }) => id !== index), { ...newWeek, id: index }].sort((a, b) => a.id - b.id))
+
+
+        fullWeeksPlanList[oldWeekIndex] = newWeek;
+
+        console.log(fullWeeksPlanList)
+
+        setFullWeeksPlanList([...fullWeeksPlanList]);
+        // setFullWeeksPlanList(_items => [..._items.filter(({ id }) => id !== index), { ...newWeek, id: index }].sort((a, b) => a.id - b.id))
+        // setFullWeeksPlanList(_items => [..._items.filter((obj, id) => id !== index), { ...newWeek }])
     }
 
-    // console.log(fullWeeksPlanList)
-
+    console.log(fullWeeksPlanList)
     return (
         <div className="container">
             <div style={{ display: "flex", flexDirection: "row" }}>
@@ -125,6 +154,7 @@ const WeekForm = connect((user) => ({
                     <div key={i}>
                         <WeekFormItem
                             week={item}
+                            weekIndex={i}
                             studuingTypeList={studuingTypeList}
                             semesterList={semesterList}
                             setWeekData={setWeekData}
@@ -137,8 +167,10 @@ const WeekForm = connect((user) => ({
                     <div>
                         <WeekFormItem
                             week={initVal}
+                            weekIndex={0}
                             studuingTypeList={studuingTypeList}
                             semesterList={semesterList}
+                            setWeekData={setWeekData}
                             onAdd={addWeek}
                             isLast={true} />
                     </div>

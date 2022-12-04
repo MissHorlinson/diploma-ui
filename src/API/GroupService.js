@@ -1,4 +1,11 @@
-const { getGroupListUrl, getStudentInGroupUrl, saveGroupUrl, getGroupByIdUrl } = require("./url");
+const {
+    getGroupListUrl,
+    saveGroupUrl,
+    getGroupByIdUrl,
+    getStudentInGroupUrl,
+    getStudentByIdUrl,
+    saveStudentUrl
+} = require("./url");
 
 export const getGroupList = (token) => fetch(getGroupListUrl, {
     method: "GET",
@@ -34,4 +41,20 @@ export const getGroupById = (id, token) => fetch(getGroupByIdUrl(id), {
     headers: {
         "Authorization": token
     }
+}).then(resp => resp.json());
+
+export const getStudentById = (id, token) => fetch(getStudentByIdUrl(id), {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+}).then(resp => resp.json());
+
+export const saveStudentData = (student, token) => fetch(saveStudentUrl, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": token
+    },
+    body: JSON.stringify(student)
 }).then(resp => resp.json());

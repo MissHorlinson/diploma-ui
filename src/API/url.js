@@ -15,6 +15,7 @@ export const getDisciplineFormUrl = `/discipline/disciplineForm`;
 export const getDisciplineTypeUrl = `/discipline/disciplineType`;
 export const getPersonalTaskFormUrl = `/discipline/personalTaskForm`;
 export const getSubjectNameUrl = `/discipline/subjectName`;
+export const saveSubjectNameUrl = `/discipline/saveSubjectName`;
 export const getReportingFormUrl = `/discipline/reportingForm`;
 export const getDisciplineByPlanUrl = (id) => `/discipline/getByPlan/${id}`
 export const getDisciplineByIdUrl = (id) => `/discipline/${id}`
@@ -30,6 +31,10 @@ export const saveWeekPlanUrl = `/weekPlan/save`;
 export const getWeekByPlanIdUrl = (id) => `/weekPlan/getByPlan/${id}`;
 
 export const getGroupListUrl = `/groupInfo/getAll`;
-export const getStudentInGroupUrl = (id) => `/groupInfo/getGroupList/${id}`;
 export const saveGroupUrl = `/groupInfo/saveGroup`;
 export const getGroupByIdUrl = (id) => `/groupInfo/getGroupById/${id}`;
+
+export const getStudentInGroupUrl = (id) => `/groupInfo/getGroupList/${id}`;
+export const getStudentByIdUrl = (id) => `/groupInfo/getStudentById/${id}`
+export const saveStudentUrl = `/groupInfo/saveStudent`;
+

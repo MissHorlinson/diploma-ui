@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { useParams } from "react-router";
 import { useFetching } from "../../hooks/useFetching";
 
-import { getDisciplineType, getReportingForm, getDisciplineForm, getPersonalTaskForm, getSubjectName, getDepartment } from "../../API/UtilDataService";
+import { getDisciplineType, getReportingForm, getDisciplineForm, getPersonalTaskForm, getSubjectName, getDepartment, saveSubjectNameData } from "../../API/UtilDataService";
 import { getDisciplineByPlan, getSemesterNum, getDisciplineById, saveDisciplineData } from "../../API/PlanInfoService";
 
 import MyModal from "../UI/MyModal";
@@ -68,8 +68,8 @@ const Discipline = connect((user) => ({
 
     const saveDiscipline = (data) => {
         Object.assign(data, { plan: { id: planId } })
-        delete data.disciplineFormId;
         data.auditoryHoursList.map((item) => delete item.disciplineFormId)
+        data.personalTaskList.map((item) => delete item.personalTaskFormId)
         console.log(JSON.stringify(data));
         saveDisciplineData(data, token).then((resp_) => {
             let objIndex = disciplineList.findIndex((obj) => obj.id === resp_.id);
@@ -82,6 +82,12 @@ const Discipline = connect((user) => ({
             }
             setModal(false);
         });
+    }
+
+    const saveNewSubjectName = (data) => {
+        saveSubjectNameData(token, data).then((resp_) => {
+            setSubjectNameList([...subjectNameList, resp_].sort((a, b) => a.name.localeCompare(b.name)))
+        })
     }
 
     const getForEdit = (id) => {
@@ -106,7 +112,9 @@ const Discipline = connect((user) => ({
                     disciplineForUpdate={disciplineForUpdate}
                     btnClass={btnClass}
                     onCancel={() => setModal(false)}
-                    onCreate={saveDiscipline} />
+                    onCreate={saveDiscipline}
+                    token={token}
+                    saveNewSubjectName={saveNewSubjectName} />
             </MyModal>
 
             {

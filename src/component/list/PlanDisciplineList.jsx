@@ -6,11 +6,11 @@ const PlanDisciplineList = ({ disciplineList, onUpdate }) => {
     return (
         <div className="container">
             <div className="titleRow">
+                <div className="headItemTitle">Семестр</div>
                 <div className="headItemTitle">Шифр</div>
                 <div className="headItemTitle">Номер</div>
                 <div className="headDoubletemTitle">Название</div>
                 <div className="headItemTitle">Кафедра</div>
-                <div className="headItemTitle">Семестр</div>
                 <div className="headItemTitle">Отчетность</div>
                 <div className="headDoubletemTitle">Аудиторные часы</div>
                 <div className="headDoubletemTitle">Самостоятельные часы</div>
@@ -23,11 +23,11 @@ const PlanDisciplineList = ({ disciplineList, onUpdate }) => {
                     disciplineList &&
                     disciplineList.map((item) => (
                         <div className="bodyRow" key={item.id}>
+                            <div className="bodyItem text-center">{item.semester}</div>
                             <div className="bodyItem text-center">{item.cipher}</div>
                             <div className="bodyItem text-center">{item.disciplineNum}</div>
                             <div className="bodyDoubleItem">{item.subjectName}</div>
                             <div className="bodyItem text-center">{item.departmentAbr}</div>
-                            <div className="bodyItem text-center">{item.semester}</div>
                             <div className="bodyItem text-center">{item.reporting}</div>
                             <div className="bodyDoubleItem">
                                 {
