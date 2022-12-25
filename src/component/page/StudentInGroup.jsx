@@ -29,7 +29,7 @@ const StudentInGroup = connect((user) => ({
 
     const [fetchGroupData, isListLoading, listError] = useFetching(async () => {
         getStudentInGroup(id, token).then((resp_) => {
-            setStudentInGroup(resp_.sort((a, b) => a.lastName - b.lastName))
+            setStudentInGroup([...resp_.sort((a, b) => b.lastName - a.lastName)])
         })
     });
 
@@ -39,7 +39,6 @@ const StudentInGroup = connect((user) => ({
 
     const saveStudent = (student) => {
         student = ({ ...student, groupInfo: { id: id } })
-        console.log(JSON.stringify(student))
         saveStudentData(student, token).then((resp_) => {
             let objIndex = studentInGroup.findIndex((obj) => obj.id === resp_.id);
             if (objIndex === -1) {
@@ -63,14 +62,17 @@ const StudentInGroup = connect((user) => ({
         <div className="container">
             {
                 hasWriteAuthority &&
-                <MyModal visible={modal} setVisible={setModal}>
-                    <StudentForm
-                        studentToUpdate={studentToUpdate}
-                        onCancel={() => setModal(false)}
-                        onSave={saveStudent} />
-                </MyModal>
+                <>
+                    <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Create Student</button>
+                    <MyModal visible={modal} setVisible={setModal}>
+                        <StudentForm
+                            studentToUpdate={studentToUpdate}
+                            onCancel={() => setModal(false)}
+                            onSave={saveStudent} />
+                    </MyModal>
+                </>
             }
-            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Create Student</button>
+
 
 
             {studentInGroup.length === 0

@@ -29,6 +29,7 @@ const DisciplineForm = ({
     const [disciplineFullNum, setDisciplineFullNum] = useState('');
     const [reporting, setReporting] = useState(2);
     const [independentHours, setIndependentHours] = useState('');
+    const [independentHoursId, setIndependentHoursId] = useState('');
     const [personalTasks, setPersonalTasks] = useState([]);
     const [auditoryHours, setAuditoryHours] = useState([]);
 
@@ -61,6 +62,7 @@ const DisciplineForm = ({
             setDisciplineFullNum(disciplineForUpdate.disciplineNum);
             setReporting(2);
             setIndependentHours(disciplineForUpdate.independentHours);
+            setIndependentHoursId(disciplineForUpdate.independentHoursId);
             setPersonalTasks(disciplineForUpdate.personalTaskList);
             setAuditoryHours(disciplineForUpdate.auditoryHoursList);
         }
@@ -78,26 +80,32 @@ const DisciplineForm = ({
         }
     ))
 
-    const setAuditory = (index, val, key) => {
+    const setAuditory = (index, val, key, id_) => {
         let oldValue = auditoryHours[index];
         let newValue;
         if (key == "disciplineForm") {
-            newValue = { ...oldValue, disciplineForm: { id: val }, disciplineFormId: val }
+            newValue = { ...oldValue, disciplineForm: { id: val }, disciplineFormId: val, id: id_ }
         } else if (key == "hoursNum") {
-            newValue = { ...oldValue, hoursNum: val }
+            newValue = { ...oldValue, hoursNum: val, id: id_ }
         }
         auditoryHours[index] = newValue
         setAuditoryHours(auditoryHours)
     }
 
-    const setPersonalTask = (val, index) => {
-        let newValue = { personalTaskForm: { id: val }, personalTaskFormId: val }
+    const setPersonalTask = (val, index, id_) => {
+        let newValue = { personalTaskForm: { id: val }, personalTaskFormId: val, id: id_ }
         personalTasks[index] = newValue;
         setPersonalTasks(personalTasks)
     }
 
     const addAuditoryHours = () => {
         setAuditoryHours((hours) => [...hours, {}]);
+    }
+
+    const removeAuditoryHours = (index) => {
+        console.log("delete click ", index, auditoryHours)
+        auditoryHours.splice(index, 1);
+        setAuditoryHours([...auditoryHours])
     }
 
     const addPersonalTask = () => {
@@ -123,11 +131,13 @@ const DisciplineForm = ({
         if (disciplineForUpdate) {
             disciplineId = disciplineForUpdate.id;
             auditoryH = auditoryHours.map((item) => ({
+                id: item.id,
                 disciplineForm: { id: item.disciplineFormId },
-                hoursNum: item.hoursNum
+                hoursNum: item.hoursNum,
             }))
 
             personalT = personalTasks.map((item) => ({
+                id: item.id,
                 personalTaskForm: { id: item.personalTaskFormId }
             }))
         } else {
@@ -135,7 +145,6 @@ const DisciplineForm = ({
             personalT = personalTasks;
         }
 
-        console.log(reporting)
         let reporting_ = null;
         if (reporting > 0) {
             reporting_ = ({
@@ -144,6 +153,13 @@ const DisciplineForm = ({
                 }
             })
         }
+
+        const indepndentHours_ = {
+            id: independentHoursId,
+            hoursNum: independentHours
+        }
+
+
         const finaldiscipline = {
             id: disciplineId,
             subjectName: { id: subjectName },
@@ -154,7 +170,7 @@ const DisciplineForm = ({
             disciplineNum: num,
             disciplineSubNum: subNum,
             reporting: reporting_,
-            independentHours: { hoursNum: independentHours },
+            independentHours: indepndentHours_,
             auditoryHoursList: auditoryH,
             personalTaskList: personalT
         }
@@ -167,17 +183,12 @@ const DisciplineForm = ({
     }
 
     const addSubjectName = () => {
-        console.log("add subj");
-        // setSubjectNameVisible("none");
         setAddSubjectNameVisible("inline");
     }
 
     const saveSubjectName = () => {
-        console.log("save" + subjectNameForSave);
-        // setSubjectNameVisible("inline");
         setAddSubjectNameVisible("none");
         const subjectName_ = { name: subjectNameForSave }
-        console.log(JSON.stringify(subjectName_));
         saveNewSubjectName(subjectName_)
         setSubjectNameForSave('');
     }
@@ -285,6 +296,7 @@ const DisciplineForm = ({
                             disciplineFormList={disciplineFormList}
                             setAuditory={setAuditory}
                             addAuditoryHours={addAuditoryHours}
+                            removeAuditoryHours={removeAuditoryHours}
                             isLast={auditoryHours.length - 1 === i} />
                     </div>
                 ))
@@ -302,7 +314,7 @@ const DisciplineForm = ({
             <div className="form-group">
                 <label>Самостоятельные часы</label>
                 <MyInputValidator
-                    value={independentHours}
+                    value={independentHours?.hoursNum}
                     onText={text => setIndependentHours(text)}
                     placeholder="Самостоятельные часы"
                     className="form-control"
@@ -315,10 +327,10 @@ const DisciplineForm = ({
 
             <label>Индивидуальное задание</label>
             {
-                personalTasks.length > 0 ? personalTasks.map(({ personalTaskFormId }, i) => (
+                personalTasks.length > 0 ? personalTasks.map((item, i) => (
                     <div key={i}>
                         <PersonalTaskItem
-                            item={personalTaskFormId}
+                            item={item}
                             index={i}
                             personalTaskFormList={personalTaskFormList}
                             setPersonalTask={setPersonalTask}

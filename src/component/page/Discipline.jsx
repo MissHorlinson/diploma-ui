@@ -47,7 +47,7 @@ const Discipline = connect((user) => ({
                 setIsError(true);
                 setErrorMsg(httpStatusCodes[resp_.status])
             } else {
-                setDisciplineList(resp_.body);
+                setDisciplineList([...resp_.body]);
                 setIsError(false);
             }
         });
@@ -70,12 +70,10 @@ const Discipline = connect((user) => ({
         Object.assign(data, { plan: { id: planId } })
         data.auditoryHoursList.map((item) => delete item.disciplineFormId)
         data.personalTaskList.map((item) => delete item.personalTaskFormId)
-        console.log(JSON.stringify(data));
         saveDisciplineData(data, token).then((resp_) => {
             let objIndex = disciplineList.findIndex((obj) => obj.id === resp_.id);
             if (objIndex === -1) {
                 setDisciplineList([...disciplineList, resp_]);
-                // .sort((a, b) => a.id.localeCompare(b.id))
             } else {
                 disciplineList[objIndex] = resp_;
                 setDisciplineList([...disciplineList]);

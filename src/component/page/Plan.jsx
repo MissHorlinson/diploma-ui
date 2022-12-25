@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
 import { Link } from "react-router-dom";
+import { Alert } from '@mui/material';
 import { connect } from "react-redux";
 
 import { useFetching } from "../../hooks/useFetching";
@@ -16,7 +17,8 @@ import {
 import {
     getPlanList,
     savePlanInfo,
-    getPlanById
+    getPlanById,
+    saveFullPlanInFile
 } from "../../API/PlanInfoService";
 
 
@@ -61,6 +63,23 @@ const Plan = connect((user) => ({
     const [isError, setIsError] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
 
+    const [alertType, setAlertType] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+
+    const [os, setOS] = useState('');
+
+    const getOs = () => {
+        const os_ = ['Windows', 'Linux', 'Mac']; // add your OS values
+        setOS(os_.find(v => navigator.userAgent.indexOf(v) >= 0));
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setAlertMessage('');
+            setAlertType('');
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [alertType, alertMessage])
 
     const [fetchData, isListLoading, listError] = useFetching(() => {
         getPlanList(token).then((resp_) => {
@@ -96,6 +115,7 @@ const Plan = connect((user) => ({
 
     useEffect(() => {
         fetchData();
+        getOs();
     }, []);
 
     const savePlan = (planInfo) => {
@@ -118,11 +138,27 @@ const Plan = connect((user) => ({
         );
     }
 
+    const loadFile = (planId) => {
+        saveFullPlanInFile(planId, token).then((resp_) => {
+            if (resp_.status === 200) {
+                setAlertType("success");
+                setAlertMessage("plan downloaded");
+            } else {
+                setAlertType("error");
+                setAlertMessage("ops have some problem");
+            }
+        })
+    }
+
+
     return (
         <div>
             <Routes>
                 <Route path='' element={
                     <>
+                        <div>
+                            <Alert severity={alertType}>{alertMessage}</Alert>
+                        </div>
                         {
                             hasWriteAuthority &&
                             <>
@@ -159,6 +195,7 @@ const Plan = connect((user) => ({
                                                     <AllPlanList
                                                         planList={planList}
                                                         onUpdate={getForUpdate}
+                                                        onLoad={loadFile}
                                                         hasWriteAuthority={hasWriteAuthority}
                                                         hasReadAuthority={hasReadAuthority}
                                                     />

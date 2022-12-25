@@ -5,6 +5,7 @@ import MySelect from "./UI/MySelect";
 const PersonalTaskItem = ({ item, index, personalTaskFormList, setPersonalTask, addPersonalTask, isLast }) => {
 
     const [form, setForm] = useState(0);
+    const [id, setId] = useState('');
 
     useEffect(() => {
         setForm(0);
@@ -12,13 +13,14 @@ const PersonalTaskItem = ({ item, index, personalTaskFormList, setPersonalTask, 
 
     useEffect(() => {
         if (item) {
-            setForm(item)
+            setForm(item.personalTaskFormId);
+            setId(item?.id);
         }
     }, [item])
 
     const formSet = (type, index) => {
         setForm(type);
-        setPersonalTask(type, index);
+        setPersonalTask(type, index, id);
     }
 
     return (

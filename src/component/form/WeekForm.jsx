@@ -34,42 +34,13 @@ const WeekForm = connect((user) => ({
     const [fetchUtilData, isListLoading, listError] = useFetching(() => {
         getStudyingType(token).then((types) => setStuduingTypeList(types));
         getWeekByPlanId(planId, token).then((week) => {
-            // setFullWeeksPlanList(week)
-            // console.log(week.length);
-            // weekPlanList = week;
-
-            // console.log(weekPlanList)
             if (week.length > 0) {
                 setFullWeeksPlanList(week)
             } else {
                 setFullWeeksPlanList([{}])
             }
-
-            // setFullWeeksPlanList(week.sort((a, b) => a.semester - b.semester))
         });
         getSemesterNum(planId, token).then((num) => setSemesterNum(num));
-        // getSemesterNum(planId).then((num) => setSemesterNum([...Array(num).keys()]))
-        // .then(() =>
-        //     getSemesterNum(planId).then((num) => {
-        //         // if (weekPlanList.length === 0) {
-        //         //     for (let i = 1; i <= num; i++) {
-        //         //         fullPlan = [{ ...initVal, weekPlanInfo: { id: planId }, }]
-        //         //         // fullPlan.push({ semester: i, weeks: [{ ...initVal, weekPlanInfo: { id: planId }, needSave: false }] })
-        //         //         // fullPlan.push({ semester: i, weeks: [{}] });
-        //         //     }
-        //         // } else {
-        //         for (let i = 1; i <= num; i++) {
-
-        //             const weeks_ = weekPlanList.filter(({ semester }) => semester === i);
-        //             weeks_.length > 0 ? fullPlan.push({ semester: i, weeks: weeks_ }) : fullPlan.push({ semester: i, weeks: [{}] });
-        //             // weeks_.length > 0 ? fullPlan.push({ semester: i, weeks: weeks_ }) : fullPlan.push({ semester: i, weeks: [{ ...initVal, weekPlanInfo: { id: planId }, needSave: false }] });
-        //         }
-
-        //         console.log(fullPlan)
-        //         // }
-        //         setFullWeeksPlanList(fullPlan)
-        //     })
-        // )
     })
 
     const semesterList = [...Array(semesterNum).keys()].map((item) => (
@@ -90,26 +61,18 @@ const WeekForm = connect((user) => ({
     const saveWeekData = () => {
         const forSave = fullWeeksPlanList.filter((item) => item.needSave === true);
         const result = forSave.map((item) => delete item.needSave && ({ ...item, weekPlanInfo: { id: planId } }));
-        console.log(JSON.stringify(result))
         saveWeekPlanData(result, token)
     }
 
     const setWeekData = (key, val, index) => {
-        console.log(key, val, index);
-
         let oldWeekIndex = 0;
         let newWeek;
         let oldWeek;
 
-        console.log(fullWeeksPlanList)
-
-        // const oldWeek = fullWeeksPlanList.find((obj) => obj.id === index)
         if (fullWeeksPlanList.length > 0) {
-            console.log(fullWeeksPlanList)
             oldWeekIndex = fullWeeksPlanList.findIndex((obj, index_) => index_ === index);
         } else {
             fullWeeksPlanList[0] = {}
-            console.log(fullWeeksPlanList)
         }
 
 
@@ -132,14 +95,9 @@ const WeekForm = connect((user) => ({
 
         fullWeeksPlanList[oldWeekIndex] = newWeek;
 
-        console.log(fullWeeksPlanList)
-
         setFullWeeksPlanList([...fullWeeksPlanList]);
-        // setFullWeeksPlanList(_items => [..._items.filter(({ id }) => id !== index), { ...newWeek, id: index }].sort((a, b) => a.id - b.id))
-        // setFullWeeksPlanList(_items => [..._items.filter((obj, id) => id !== index), { ...newWeek }])
     }
 
-    console.log(fullWeeksPlanList)
     return (
         <div className="container">
             <div style={{ display: "flex", flexDirection: "row" }}>

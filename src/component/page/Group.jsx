@@ -26,7 +26,7 @@ const httpStatusCodes = {
 const Group = connect((user) => ({
     token: user.token,
     hasWriteAuthority: user.role < 3,
-    hasReadAuthority: user.role > 3 && user.role < 5
+    hasReadAuthority: user.role > 3 && user.role < 6
 }))
     (({ token, hasWriteAuthority, hasReadAuthority }) => {
 
@@ -67,7 +67,6 @@ const Group = connect((user) => ({
         }, [listForFront, filter])
 
         const saveGroup = (data) => {
-            console.log(JSON.stringify(data))
             saveGroupData(data, token).then((resp_) => {
                 let objIndex = groupList.findIndex((obj) => obj.id === resp_.id);
                 if (objIndex === -1) {

@@ -4,14 +4,43 @@ import { Link, useNavigate } from "react-router-dom";
 
 import AuthService from "../../API/AuthenticationService";
 
+const pathList = {
+    1: ["Plan",
+        "Group",
+        "Teacher"],
+    3: [
+        "Base",
+        "Step",
+        "Cipher",
+        "Qualification",
+        "Stud form",
+        "Disc form",
+        "Disc type",
+        "Personal task",
+        "Position",
+        "Degree",
+        "Report form",
+        "Rank",
+        "Stud term",
+        "Stud type",
+        "Department",
+    ],
+    5: ["Group"],
+    6: ["Group"],
+    7: ["Group"]
+}
+
+
 const Header = connect((data) => ({
-    isAuth: Boolean(data.token)
+    isAuth: Boolean(data.token),
+    authority: data.role
 }), (dispatch) => ({
     clearToken: () => dispatch({
         type: "saveData",
         data: { token: null }
     })
-}))(({ isAuth, clearToken }) => {
+}))(({ isAuth, clearToken, authority }) => {
+
 
     const navigate = useNavigate();
     const logout = e => {
@@ -29,11 +58,17 @@ const Header = connect((data) => ({
                     isAuth
                         ?
                         <div style={{ display: "flex", flexDirection: "row" }}>
-                            <Link to="/plan" className="nav-link link-info link_style">Plan</Link>
-                            <Link to="/group" className="nav-link link-info link_style">Group</Link>
+                            {
+                                //  console.log(pathList[authority], authority)
+                                pathList[authority].map((path, i) => <Link to={`/${path.toLowerCase().replace(" ", "")}`} className="nav-link link-info link_style" key={i}>{path}</Link>)
+                            }
                         </div>
                         :
-                        <></>
+                        <>
+                            {
+                                console.log("empty")
+                            }
+                        </>
                 }
 
                 <div style={{ position: 'relative', right: '50px' }}>

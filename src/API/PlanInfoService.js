@@ -1,4 +1,15 @@
-const { getPlanInfoListUrl, savePlanUrl, getSemesterNumUrl, saveWeekPlanUrl, getDisciplineByPlanUrl, getWeekByPlanIdUrl, getDisciplineByIdUrl, saveDisciplineUrl, getPlanInfoByIdUrl } = require("./url");
+const {
+    getPlanInfoListUrl,
+    savePlanUrl,
+    getSemesterNumUrl,
+    saveWeekPlanUrl,
+    saveDisciplineUrl,
+    getDisciplineByPlanUrl,
+    getWeekByPlanIdUrl,
+    getDisciplineByIdUrl,
+    getPlanInfoByIdUrl,
+    saveFullPlanInFileUrl
+} = require("./url");
 
 export const getPlanList = (token) => fetch(getPlanInfoListUrl, {
     method: "GET",
@@ -85,3 +96,17 @@ export const saveDisciplineData = (discipline, token) => fetch(saveDisciplineUrl
     },
     body: JSON.stringify(discipline)
 }).then(resp => resp.json());
+
+export const saveFullPlanInFile = (planId, token) => fetch(saveFullPlanInFileUrl(planId), {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+})
+    .then(resp => {
+        if (resp.ok) {
+            return { status: resp.status }
+        } else {
+            return { status: resp.status }
+        }
+    })

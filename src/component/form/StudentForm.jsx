@@ -35,9 +35,9 @@ const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
             setSecondName(studentToUpdate.secondName);
             setLastName(studentToUpdate.lastName);
             setPhone(studentToUpdate.phone);
-            setPassport(studentToUpdate.passport);
+            // setPassport(studentToUpdate.passport);
             setEmail(studentToUpdate.email);
-            setBirthday(studentToUpdate.birthday?.replace("T00:00", ""));
+            // setBirthday(studentToUpdate.birthday?.replace("T00:00", ""));
             setRecordBook(studentToUpdate.recordBook);
         } else {
             clearStates();
@@ -53,9 +53,9 @@ const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
             secondName: secondName,
             lastName: lastName,
             phone: phone,
-            passport: passport,
+            // passport: passport,
             email: email,
-            birthday: birthday + "T00:00:00",
+            // birthday: birthday + "T00:00:00",
             recordBook: recordBook
         });
 
@@ -110,7 +110,7 @@ const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
                 </div>
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
                 <label>Passport</label>
                 <MyInputValidator
                     value={passport}
@@ -123,7 +123,7 @@ const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
                 <div className="invalid-feedback">
                     Record book can contain only numbers or letters
                 </div>
-            </div>
+            </div> */}
 
             <div className="form-group">
                 <label>Email</label>
@@ -169,14 +169,14 @@ const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
                 </div>
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
                 <label>Birthday</label>
                 <input
                     type="date"
                     value={birthday}
                     onChange={e => setBirthday(e.target.value)}
                     className="form-control" />
-            </div>
+            </div> */}
 
             <div className={btnClass}>
                 <button className="btn btn-success" style={{ margin: "5px" }} onClick={saveStudent}>Save</button>
