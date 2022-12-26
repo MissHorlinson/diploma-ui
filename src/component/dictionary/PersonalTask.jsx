@@ -54,11 +54,12 @@ const PersonalTask = connect((user) => ({
 
     return (
         <div className="container">
-            <ul class="list-group list-group-flush">
+            <h3 className="text-center py-2">Індивідуальне завдання</h3>
+            <ul className="list-group list-group-flush">
                 {
                     personalTaskFormList &&
                     personalTaskFormList.map((item) => (
-                        <li class="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
+                        <li className="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
                             {
                                 needUpd && personalTaskFormToUpdateInx === item.id ?
                                     <>

@@ -58,12 +58,12 @@ const StudyingType = connect((user) => ({
                 </>
             }
 
-
-            <ul class="list-group list-group-flush">
+            <h3 className="text-center py-2">Тип навчання</h3>
+            <ul className="list-group list-group-flush">
                 {
                     studyingTypeList &&
                     studyingTypeList.map((item) => (
-                        <li class="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
+                        <li className="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
                             <div style={{ flex: 1.5 }}>{item.name}</div>
                             <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }} onClick={() => edit(item.id)}>
                                 <img src={editImg} style={{ width: "35px", height: "35px" }} alt="edit" />

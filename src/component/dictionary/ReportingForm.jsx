@@ -54,11 +54,12 @@ const ReportingForm = connect((user) => ({
 
     return (
         <div className="container">
-            <ul class="list-group list-group-flush">
+            <h3 className="text-center py-2">Форма звітності</h3>
+            <ul className="list-group list-group-flush">
                 {
                     reportingFormList &&
                     reportingFormList.map((item) => (
-                        <li class="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
+                        <li className="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
                             {
                                 needUpd && reportingFormToUpdateInx === item.id ?
                                     <>

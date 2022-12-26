@@ -25,6 +25,8 @@ import StudyingTerm from "../dictionary/StudyingTerm";
 import StudyingType from "../dictionary/StudyingType";
 import Department from '../dictionary/Department';
 
+import User from '../adminPage/Users';
+
 
 const AppRoutes = connect((data) => ({
     isAuth: Boolean(data.token),
@@ -52,19 +54,21 @@ const AppRoutes = connect((data) => ({
                     <Route path="/step" element={<Step />}></Route>
                     <Route path="/cipher" element={<Cipher />}></Route>
                     <Route path="/qualification" element={<Qualification />}></Route>
-                    <Route path="/studform" element={<StudyingForm />}></Route>
-                    <Route path="/disctype" element={<DisciplineType />}></Route>
-                    <Route path="/discform" element={<DisciplineForm />}></Route>
+                    <Route path="/studyingForm" element={<StudyingForm />}></Route>
+                    <Route path="/disciplineType" element={<DisciplineType />}></Route>
+                    <Route path="/disciplineForm" element={<DisciplineForm />}></Route>
 
-                    <Route path="/personaltask" element={<PersonalTask />}></Route>
+                    <Route path="/personalTaskForm" element={<PersonalTask />}></Route>
                     <Route path="/position" element={<Position />}></Route>
                     <Route path="/degree" element={<Degree />}></Route>
                     <Route path="/rank" element={<Rank />}></Route>
-                    <Route path="/reportform" element={<ReportingForm />}></Route>
+                    <Route path="/reportForm" element={<ReportingForm />}></Route>
 
-                    <Route path="/studterm" element={<StudyingTerm />}></Route>
-                    <Route path="/studtype" element={<StudyingType />}></Route>
+                    <Route path="/studyingTerm" element={<StudyingTerm />}></Route>
+                    <Route path="/studyingType" element={<StudyingType />}></Route>
                     <Route path="/department" element={<Department />}></Route>
+
+                    <Route path="/admin/*" element={<User />}></Route>
                 </Routes>
                 <Footer />
             </Router>

@@ -59,7 +59,7 @@ const Discipline = connect((user) => ({
         getSubjectName(token).then((subjects) => setSubjectNameList(subjects));
         getDepartment(token).then((departments) => setDepartmentList(departments));
         getSemesterNum(planId, token).then((num) => setSemesterNum(num));
-    })
+    });
 
     useEffect(() => {
         fetchDisciplineData();

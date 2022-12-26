@@ -80,3 +80,11 @@ export const getTeacherByIdUrl = (id) => `/teacher/getById/${id}`;
 
 export const saveFullPlanInFileUrl = (id) => `/xlsFiles/getFullPlanXlsFile/${id}`;
 
+export const getRoleUrl = `/admin/getRoles`;
+export const getStatusUrl = `/admin/getStatuses`;
+export const getUsersUrl = `/admin/getUsers`;
+
+
+export const loginUrl = `/auth/login`;
+export const logoutUrl = `/auth/logout`;
+

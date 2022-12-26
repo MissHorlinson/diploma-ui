@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import AuthService from "../../API/AuthenticationService";
+import { logIn } from "../../API/AuthenticationService";
 
 const initValue = {
     username: '',
@@ -31,10 +31,9 @@ const LoginPage = connect(null, (dispatch) => ({
         }
 
         const login = e => {
-            e.preventDefault();
-            AuthService.login(cred).then((resp) => {
+            logIn(cred).then((resp) => {
                 if (resp.status === 200) {
-                    setUser(resp.data);
+                    setUser(resp.body);
                     navigate("/plan");
                 }
             }).catch((err) => {

@@ -1,13 +1,19 @@
-import axios from "axios";
+const { loginUrl, logoutUrl } = require("./url");
 
-export default class AuthService {
-
-    static async login(creds) {
-        const response = await axios.post('/auth/login', creds);
-        return response;
+export const logIn = (creds) => fetch(loginUrl, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(creds)
+}).then(resp => {
+    if (resp.ok) {
+        return resp.json().then(data => ({ status: resp.status, body: data }))
+    } else {
+        return { status: resp.status, body: {} }
     }
+});
 
-    static async logout() {
-        await axios.post('/auth/logout');
-    }
-}
+export const logOut = () => fetch(logoutUrl, {
+    method: "POST"
+}).then(resp => resp.json());
