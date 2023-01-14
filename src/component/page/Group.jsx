@@ -138,7 +138,7 @@ const Group = connect((user) => ({
                     </Route>
                     <Route path=':id/students' element={
                         <>
-                            <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}> {"\<- Groups"}</Link>
+                            <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}> {"\<- Список груп"}</Link>
                             <StudentInGroup />
                         </>
                     }></Route>

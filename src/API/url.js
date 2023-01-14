@@ -58,6 +58,7 @@ export const saveDisciplineUrl = `/discipline/save`;
 export const getPlanInfoListUrl = `/planInfo/getAll`;
 export const savePlanUrl = `/planInfo/save`;
 export const getPlanInfoByIdUrl = (id) => `/planInfo/getById/${id}`;
+export const getPlanByGroupUrl = (id) => `/planInfo/getByGroupStream?streamId=${id}`;
 
 export const getSemesterNumUrl = `/planInfo/getSemesterNum/`;
 
@@ -79,6 +80,7 @@ export const saveTeacherUrl = `/teacher/save`;
 export const getTeacherByIdUrl = (id) => `/teacher/getById/${id}`;
 
 export const saveFullPlanInFileUrl = (id) => `/xlsFiles/getFullPlanXlsFile/${id}`;
+export const savePersonalPlanInFileUrl = (studentId, planId, course) => `/xlsFiles/getPersonalPlanXlsFile?planId=${planId}&studentId=${studentId}&course=${course}`;
 
 export const getRoleUrl = `/admin/getRoles`;
 export const getStatusUrl = `/admin/getStatuses`;
@@ -87,4 +89,3 @@ export const getUsersUrl = `/admin/getUsers`;
 
 export const loginUrl = `/auth/login`;
 export const logoutUrl = `/auth/logout`;
-

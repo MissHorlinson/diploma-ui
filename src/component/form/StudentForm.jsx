@@ -65,37 +65,37 @@ const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
     return (
         <div className="container">
             <div className="form-group">
-                <label>First Name</label>
+                <label>Ім'я</label>
                 <MyInputValidator
                     value={firstName}
                     onText={text => setFirstName(text)}
                     name="firstName"
                     placeholder="First Name"
                     className="form-control"
-                    check="[A-Z][a-z]*$"
+                    check="[А-Я][а-я]*$"
                 />
                 <div className="invalid-feedback">
-                    First name should start with upper case and can not contains numbers or symbols
+                    Ім'я повинне прчинатися з великой літери і не може містити в собі цифри
                 </div>
             </div>
 
             <div className="form-group">
-                <label>Second Name</label>
+                <label>По батькові</label>
                 <MyInputValidator
                     value={secondName}
                     onText={text => setSecondName(text)}
                     name="secondName"
                     placeholder="Second Name"
                     className="form-control"
-                    check="[A-Z][a-z]*$"
+                    check="[А-Я][а-я]*$"
                 />
                 <div className="invalid-feedback">
-                    Second name should start with upper case and can not contains numbers or symbols
+                    По батькові повинне прчинатися з великой літери і не може містити в собі цифри
                 </div>
             </div>
 
             <div className="form-group">
-                <label>Last Name</label>
+                <label>Прізвище</label>
                 <MyInputValidator
                     value={lastName}
                     type="text"
@@ -141,7 +141,7 @@ const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
             </div>
 
             <div className="form-group">
-                <label>Phone</label>
+                <label>Телефон</label>
                 <MyInputValidator
                     value={phone}
                     onText={text => setPhone(text)}
@@ -151,7 +151,7 @@ const StudentForm = ({ onSave, studentToUpdate, btnClass, onCancel }) => {
                     check="^[0-9-]+$"
                 />
                 <div className="invalid-feedback">
-                    Phone can contain onle numbers
+                    Номер телефону може містити лише цифри
                 </div>
             </div>
 

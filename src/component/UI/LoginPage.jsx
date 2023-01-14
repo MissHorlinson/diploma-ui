@@ -35,6 +35,12 @@ const LoginPage = connect(null, (dispatch) => ({
                 if (resp.status === 200) {
                     setUser(resp.body);
                     navigate("/plan");
+                } else if (resp.status === 500) {
+                    setErrorMsg("Server encountered")
+                    setCredValid('contents');
+                } else if (resp.status === 401) {
+                    setErrorMsg("Invalid credential")
+                    setCredValid('contents');
                 }
             }).catch((err) => {
                 setErrorMsg(err.response.data)

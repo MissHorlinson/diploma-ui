@@ -101,10 +101,10 @@ const WeekForm = connect((user) => ({
     return (
         <div className="container">
             <div style={{ display: "flex", flexDirection: "row" }}>
-                <label style={{ flex: 0.3, textAlign: "center" }}>Sem</label>
-                <label style={{ flex: 1.5, textAlign: "center" }}>Type</label>
-                <label style={{ flex: 1, textAlign: "center" }}>Start</label>
-                <label style={{ flex: 1, textAlign: "center" }}>Term</label>
+                <label style={{ flex: 0.3, textAlign: "center" }}>Семестр</label>
+                <label style={{ flex: 1.5, textAlign: "center" }}>Тип діяльності</label>
+                <label style={{ flex: 1, textAlign: "center" }}>Початок</label>
+                <label style={{ flex: 1, textAlign: "center" }}>Тривалість</label>
                 <label style={{ flex: 0.6 }}></label>
             </div>
             {

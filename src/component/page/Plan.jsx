@@ -17,10 +17,8 @@ import {
 import {
     getPlanList,
     savePlanInfo,
-    getPlanById,
-    saveFullPlanInFile
+    getPlanById
 } from "../../API/PlanInfoService";
-
 
 import MyModal from "../UI/MyModal";
 import Loader from "../UI/Loader";
@@ -39,6 +37,9 @@ const httpStatusCodes = {
     404: "NOT_FOUND",
     500: "INTERNAL_SERVER ERROR"
 }
+
+const { ip, port } = require('../../urlConfig.json');
+
 
 const Plan = connect((user) => ({
     token: user.token,
@@ -67,6 +68,8 @@ const Plan = connect((user) => ({
     const [alertMessage, setAlertMessage] = useState('');
 
     const [os, setOS] = useState('');
+
+
 
     const getOs = () => {
         const os_ = ['Windows', 'Linux', 'Mac']; // add your OS values
@@ -139,15 +142,36 @@ const Plan = connect((user) => ({
     }
 
     const loadFile = (planId) => {
-        saveFullPlanInFile(planId, token).then((resp_) => {
-            if (resp_.status === 200) {
-                setAlertType("success");
-                setAlertMessage("plan downloaded");
+        // console.log(`http://${ip}:${port}/xlsFiles/getFullPlanXlsFile/${planId}`)
+        fetch(`/xlsFiles/getFullPlanXlsFile/${planId}`, {
+            method: "get",
+            headers: {
+                "Authorization": token,
+                "Content-Type": 'application/json'
+            }
+        }).then(res => {
+            if (res.ok) {
+                const head = res.headers.get("content-disposition");
+                const file_ = head.split("=")[1];
+                return res.blob();
             } else {
                 setAlertType("error");
                 setAlertMessage("ops have some problem");
             }
-        })
+        }).then((blob) => {
+            console.log(blob)
+            const href = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = href;
+            link.setAttribute('download', "plan.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setAlertType("success");
+            setAlertMessage("plan downloaded");
+        }).catch((err) => {
+            return Promise.reject({ Error: 'Something Went Wrong', err });
+        });
     }
 
 
@@ -162,7 +186,7 @@ const Plan = connect((user) => ({
                         {
                             hasWriteAuthority &&
                             <>
-                                <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Create Plan</button>
+                                <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Створити план</button>
                                 <MyModal visible={modal} setVisible={setModal}>
                                     <PlanInfoForm
                                         qualificationList={qualificationList}
@@ -209,14 +233,14 @@ const Plan = connect((user) => ({
                 </Route>
                 <Route path=':planId/weeks' element={
                     <>
-                        <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}>{"\<- Plan"}</Link>
+                        <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}>{"\<- Список планів"}</Link>
                         <WeekForm />
                     </>
                 }>
                 </Route>
                 <Route path=':planId/disciplines' element={
                     <>
-                        <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}>{"\<- Plan"}</Link>
+                        <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}>{"\<- Список планів"}</Link>
                         <Discipline />
                     </>
                 }>

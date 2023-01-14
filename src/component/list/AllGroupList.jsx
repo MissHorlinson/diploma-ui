@@ -8,10 +8,10 @@ const AllGroupList = ({ groupList, onUpdate, hasWriteAuthority }) => {
             <div className="titleRow">
                 <div className="headItemTitle">Группа</div>
                 <div className="headItemTitle">Студенты</div>
-                <div className="headItemTitle">Планы</div>
-                {
+                {/* <div className="headItemTitle">Планы</div> */}
+                {/* {
                     hasWriteAuthority && <div className="headItemTitle">Action</div>
-                }
+                } */}
 
             </div>
 
@@ -24,7 +24,7 @@ const AllGroupList = ({ groupList, onUpdate, hasWriteAuthority }) => {
                             <div className="bodyItem text-center">
                                 <Link className="btn btn-secondary actionBtn" to={"./" + item.id + "/students"}>Студенты</Link>
                             </div>
-                            <div className="bodyItem text-center"><button>Save plan</button></div>
+                            {/* <div className="bodyItem text-center"><button>Save plan</button></div> */}
                             {
                                 hasWriteAuthority &&
                                 <div className="bodyItem text-center">

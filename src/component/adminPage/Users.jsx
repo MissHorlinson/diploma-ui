@@ -38,7 +38,7 @@ const User = connect((user) => ({
 
     return (
         <div className="container">
-            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Create user</button>
+            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Додати користувача</button>
             <MyModal visible={modal} setVisible={setModal}>
                 <CreateUserForm
                     roleList={roleList}
@@ -47,12 +47,12 @@ const User = connect((user) => ({
                 />
             </MyModal>
 
-            <h3 className="text-center py-2">Users</h3>
+            <h3 className="text-center py-2">Користувачі системи</h3>
             <ul className="list-group list-group-flush">
                 <div style={{ display: "flex", flex: 1 }} className="d-flex justify-content-between">
-                    <div style={{ flex: 1.5 }} className="px-2">username</div>
-                    <div style={{ flex: 1.5 }}>role</div>
-                    <div style={{ flex: 1.5 }}>status</div>
+                    <div style={{ flex: 1.5 }} className="px-2">логін</div>
+                    <div style={{ flex: 1.5 }}>роль</div>
+                    <div style={{ flex: 1.5 }}>статус</div>
                     {/* <div style={{ flex: 0.5 }}>action</div> */}
                 </div>
                 {

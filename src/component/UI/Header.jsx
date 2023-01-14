@@ -8,12 +8,10 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import { logOut } from "../../API/AuthenticationService";
 
 const pathList = {
-    1: ["Plan",
-        "Group",
-        "Teacher"],
-    5: ["Group"],
-    6: ["Group"],
-    7: ["Group"]
+    1: [{ name: "Плани", path: "/plan" }, { name: "Групи", path: "/group" }, { name: "Викладачі", path: "/teacher" },],
+    5: [{ name: "Плани", path: "/plan" }, { name: "Групи", path: "/group" },],
+    6: ["Групи"],
+    7: ["Групи"]
 }
 
 const generalPlanDataPath = [
@@ -88,12 +86,12 @@ const Header = connect((data) => ({
                                 }
                             </DropdownButton>
 
-                            <Link to={`/admin`} className="nav-link link-info link_style">Admin</Link>
+                            <Link to={`/admin`} className="nav-link link-info link_style">Адмін</Link>
                         </div>
                         :
                         <div style={{ display: "flex", flexDirection: "row" }}>
                             {
-                                pathList[authority].map((path, i) => <Link to={`/${path.toLowerCase().replace(" ", "")}`} className="nav-link link-info link_style" key={i}>{path}</Link>)
+                                pathList[authority].map(({ name, path }, i) => <Link to={`${path.toLowerCase().replace(" ", "")}`} className="nav-link link-info link_style" key={i}>{name}</Link>)
                             }
                         </div>
                 }

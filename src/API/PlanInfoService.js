@@ -8,7 +8,10 @@ const {
     getWeekByPlanIdUrl,
     getDisciplineByIdUrl,
     getPlanInfoByIdUrl,
-    saveFullPlanInFileUrl
+    getPlanByGroupUrl,
+    saveFullPlanInFileUrl,
+    savePersonalPlanInFileUrl,
+    test
 } = require("./url");
 
 export const getPlanList = (token) => fetch(getPlanInfoListUrl, {
@@ -29,8 +32,14 @@ export const getPlanById = (id, token) => fetch(getPlanInfoByIdUrl(id), {
     headers: {
         "Authorization": token
     }
-})
-    .then(resp => resp.json())
+}).then(resp => resp.json())
+
+export const getPlanByGroup = (id, token) => fetch(getPlanByGroupUrl(id), {
+    method: "GET",
+    headers: {
+        "Authorization": token
+    }
+}).then(resp => resp.json())
 
 export const savePlanInfo = (planInfo, token) => fetch(savePlanUrl, {
     method: "POST",
@@ -97,16 +106,49 @@ export const saveDisciplineData = (discipline, token) => fetch(saveDisciplineUrl
     body: JSON.stringify(discipline)
 }).then(resp => resp.json());
 
+
 export const saveFullPlanInFile = (planId, token) => fetch(saveFullPlanInFileUrl(planId), {
     method: "GET",
     headers: {
-        "Authorization": token
+        "Authorization": token,
+        "Content-Type": "application/json"
     }
-})
-    .then(resp => {
-        if (resp.ok) {
-            return { status: resp.status }
-        } else {
-            return { status: resp.status }
-        }
-    })
+}).then(res => {
+    if (res.ok) {
+        return res.blob();
+    }
+}).then(({ blob, filename }) => {
+    const href = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.setAttribute('download', "file.xlsx"); //or any other extension
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}).catch((err) => {
+    return Promise.reject({ Error: 'Something Went Wrong', err });
+});
+
+
+
+export const savePersonalPlanInFile = (planId, studentId, course, token) => fetch(savePersonalPlanInFileUrl(studentId, planId, course), {
+    method: "GET",
+    headers: {
+        "Authorization": token,
+        "Content-Type": "application/json"
+    }
+}).then(res => {
+    return res.blob();
+}).then(blob => {
+    const href = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.setAttribute('download', 'file.xlsx'); //or any other extension
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}).catch((err) => {
+    return Promise.reject({ Error: 'Something Went Wrong', err });
+});
+
+

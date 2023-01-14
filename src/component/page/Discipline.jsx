@@ -97,7 +97,7 @@ const Discipline = connect((user) => ({
 
     return (
         <div className="container">
-            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => { setDisciplineForUpdate(null); setModal(true) }}>Add Discipline</button>
+            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => { setDisciplineForUpdate(null); setModal(true) }}>створити дисципліну</button>
             <MyModal visible={modal} setVisible={setModal}>
                 <DisciplineForm
                     disciplineTypeList={disciplineTypeList}

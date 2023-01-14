@@ -7,12 +7,12 @@ const AllPlanList = ({ planList, onUpdate, onLoad, hasWriteAuthority, hasReadAut
     return (
         <div className="container">
             <div className="titleRow">
-                <div className="headItemTitle">Year</div>
-                <div className="headDoubletemTitle">Step</div>
-                <div className="headDoubletemTitle">Base</div>
-                <div className="headItemTitle">Cipher</div>
-                {hasReadAuthority && <div className="headItemTitle">Load</div>}
-                {hasWriteAuthority && <div className="headDoubletemTitle">Detail</div>}
+                <div className="headItemTitle">Рік</div>
+                <div className="headDoubletemTitle">Кваліфікаця</div>
+                <div className="headDoubletemTitle">Основа</div>
+                <div className="headItemTitle">Шифр</div>
+                {hasReadAuthority && <div className="headItemTitle">Завантажити</div>}
+                {hasWriteAuthority && <div className="headDoubletemTitle">Деталі</div>}
                 {hasWriteAuthority && <div className="headItemTitle"></div>}
             </div>
             <div className="bodyContainer">
@@ -27,14 +27,14 @@ const AllPlanList = ({ planList, onUpdate, onLoad, hasWriteAuthority, hasReadAut
                             {
                                 hasReadAuthority &&
                                 <div className="bodyItem text-center">
-                                    <button onClick={() => onLoad(item.planId)}>Load plan</button>
+                                    <button onClick={() => onLoad(item.planId)}>Завантажити план</button>
                                 </div>
                             }
                             {
                                 hasWriteAuthority &&
                                 <div className="bodyDoubleItem text-center">
-                                    <Link className="btn btn-secondary actionBtn" to={"./" + item.planId + "/weeks"}>Weeks</Link>
-                                    <Link className="btn btn-secondary actionBtn" to={"./" + item.planId + "/disciplines"}>Discipline</Link>
+                                    <Link className="btn btn-secondary actionBtn" to={"./" + item.planId + "/weeks"}>Тиждні</Link>
+                                    <Link className="btn btn-secondary actionBtn" to={"./" + item.planId + "/disciplines"}>Дисципліни</Link>
                                 </div>
                             }
                             {
