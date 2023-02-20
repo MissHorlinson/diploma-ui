@@ -51,13 +51,13 @@ const LoginPage = connect(null, (dispatch) => ({
 
         return (
             <div className="container">
-                <div className="d-flex justify-content-center h-100" style={{ margin: '20px' }}>
+                <div className="d-flex justify-content-center h-100 m-3">
                     <div className="card">
                         <article className="card-body">
                             <h4 className="card-title text-center mb-4 mt-1">Sign in</h4>
                             <hr />
                             <div className="login">
-                                <div className="form-group" style={{ margin: '5px' }}>
+                                <div className="form-group m-2">
                                     <div className="input-group">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text"> <i className="fa fa-user" style={{ height: '25px' }}></i> </span>
@@ -69,7 +69,7 @@ const LoginPage = connect(null, (dispatch) => ({
                                             placeholder="Email or login" />
                                     </div>
                                 </div>
-                                <div className="form-group" style={{ margin: '5px' }}>
+                                <div className="form-group m-2">
                                     <div className="input-group">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text"> <i className="fa fa-lock" style={{ height: '25px' }}></i> </span>
@@ -82,8 +82,8 @@ const LoginPage = connect(null, (dispatch) => ({
                                             type="password" />
                                     </div>
                                 </div>
-                                <div className="form-group text-center" style={{ margin: '5px' }}>
-                                    <button className="btn btn-primary btn-block" onClick={login}> Login  </button>
+                                <div className="form-group text-center m-2">
+                                    <button className="btn btn-primary btn-block" onClick={login}> Login </button>
                                 </div>
                                 <div style={{ display: credValid }} className="text-center alert alert-danger" role="alert">
                                     {errorMsg}

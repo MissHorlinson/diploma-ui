@@ -4,7 +4,7 @@ import MyInputValidator from '../UI/MyInputValdator';
 const initialVal = {
     name: ''
 }
-const SubjectForm = ({ onSave, subjectToUpdate, btnClass, onCancel }) => {
+const SubjectForm = ({ onSave, subjectToUpdate, onCancel }) => {
 
     const [subject, setSubject] = useState(initialVal);
 
@@ -35,7 +35,7 @@ const SubjectForm = ({ onSave, subjectToUpdate, btnClass, onCancel }) => {
         <div>
             <div className="container">
                 <div className="form-group">
-                    <label>Subject Name</label>
+                    <label>Назва предмету</label>
                     <MyInputValidator
                         value={subject.name}
                         onText={text => setValue({ name: text })}
@@ -45,13 +45,13 @@ const SubjectForm = ({ onSave, subjectToUpdate, btnClass, onCancel }) => {
                         check="[A-Za-z\s-]+$"
                     />
                     <div className="invalid-feedback">
-                        Name should can not contains numbers or symbols
+                        Назва повинна складатися з літер
                     </div>
                 </div>
 
-                <div className={btnClass}>
-                    <button className="btn btn-success" style={{ margin: "5px" }} onClick={saveSubject}>Save</button>
-                    <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={onCancel}>Cancel</button>
+                <div className="text-center m-1">
+                    <button className="btn btn-success m-1" onClick={saveSubject}>Зберегти</button>
+                    <button className="btn btn-danger m-1" onClick={onCancel}>Відміна</button>
                 </div>
             </div>
         </div>

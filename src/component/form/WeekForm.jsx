@@ -7,16 +7,13 @@ import { useFetching } from "../../hooks/useFetching";
 import { getSemesterNum, saveWeekPlanData, getWeekByPlanId } from "../../API/PlanInfoService";
 import { getStudyingType } from "../../API/UtilDataService";
 
-import MySelect from "../UI/MySelect";
-import MyInputValidator from "../UI/MyInputValdator";
 import WeekFormItem from "./WeekFormItem";
 
 const initVal = {
-    weekPlanInfo: { id: '' },
     semester: '',
     startWeek: '',
     term: '',
-    studyingType: { id: '' }
+    studyingTypeId: ''
 }
 
 const WeekForm = connect((user) => ({
@@ -27,9 +24,7 @@ const WeekForm = connect((user) => ({
 
     const [studuingTypeList, setStuduingTypeList] = useState([]);
     const [semesterNum, setSemesterNum] = useState(0);
-
     const [fullWeeksPlanList, setFullWeeksPlanList] = useState([]);
-
 
     const [fetchUtilData, isListLoading, listError] = useFetching(() => {
         getStudyingType(token).then((types) => setStuduingTypeList(types));
@@ -60,7 +55,7 @@ const WeekForm = connect((user) => ({
 
     const saveWeekData = () => {
         const forSave = fullWeeksPlanList.filter((item) => item.needSave === true);
-        const result = forSave.map((item) => delete item.needSave && ({ ...item, weekPlanInfo: { id: planId } }));
+        const result = forSave.map((item) => delete item.needSave && ({ ...item, planId: planId }));
         saveWeekPlanData(result, token)
     }
 
@@ -75,23 +70,19 @@ const WeekForm = connect((user) => ({
             fullWeeksPlanList[0] = {}
         }
 
-
-
         if (oldWeekIndex >= 0) {
             oldWeek = fullWeeksPlanList[oldWeekIndex];
         }
-
 
         if (key === 'startWeek') {
             newWeek = { ...oldWeek, startWeek: val, needSave: true }
         } else if (key === 'term') {
             newWeek = { ...oldWeek, term: val, needSave: true }
         } else if (key === 'type') {
-            newWeek = { ...oldWeek, studyingType: { id: val }, needSave: true }
+            newWeek = { ...oldWeek, studyingTypeId: val, needSave: true }
         } else if (key === 'semester') {
             newWeek = { ...oldWeek, semester: val, needSave: true }
         }
-
 
         fullWeeksPlanList[oldWeekIndex] = newWeek;
 
@@ -100,7 +91,7 @@ const WeekForm = connect((user) => ({
 
     return (
         <div className="container">
-            <div style={{ display: "flex", flexDirection: "row" }}>
+            <div className="FlexRow">
                 <label style={{ flex: 0.3, textAlign: "center" }}>Семестр</label>
                 <label style={{ flex: 1.5, textAlign: "center" }}>Тип діяльності</label>
                 <label style={{ flex: 1, textAlign: "center" }}>Початок</label>
@@ -137,8 +128,8 @@ const WeekForm = connect((user) => ({
             <div className="text-center">
                 <button
                     className="btn btn-info"
-                    onClick={() => saveWeekData()}>
-                    Save
+                    onClick={saveWeekData}>
+                    Зберегти
                 </button>
             </div>
         </div>

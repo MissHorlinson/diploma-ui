@@ -18,8 +18,8 @@ const AuditoryHourItem = ({ item, index, setAuditory, disciplineFormList, addAud
     }, [item])
 
     return (
-        <div style={{ display: "flex", flexDirection: "row" }}>
-            <div className="form-group" style={{ margin: 2, flex: 1.5 }}>
+        <div className="flexRow">
+            <div className="form-group oneAndHalfFlex me-1">
                 <MySelect
                     value={form}
                     onChange={(type) => {
@@ -30,7 +30,7 @@ const AuditoryHourItem = ({ item, index, setAuditory, disciplineFormList, addAud
                     options={disciplineFormList} />
             </div>
 
-            <div className="form-group" style={{ margin: 2, flex: 1.25 }}>
+            <div className="form-group oneAndHalfFlex">
                 <MyInputValidator
                     value={hours}
                     onText={(text) => {
@@ -41,21 +41,21 @@ const AuditoryHourItem = ({ item, index, setAuditory, disciplineFormList, addAud
                     className="form-control"
                     check="^[0-9]+" />
                 <div className="invalid-feedback">
-                    Can be only numbers
+                    Може складатися лише з цифр
                 </div>
             </div>
             {
                 isLast ?
                     <>
-                        <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.1 }}>
+                        <button className="auditoryHoursBtn">
                             <img src={require(`../icon/plusIcon.png`)} alt="+" onClick={addAuditoryHours} />
                         </button>
-                        <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.1 }}>
+                        <button className="auditoryHoursBtn">
                             <img src={require(`../icon/deleteIcon.png`)} alt="x" onClick={() => removeAuditoryHours(index)} />
                         </button>
                     </>
                     :
-                    <div style={{ flex: 0.29 }}></div>
+                    <div className="empty-0-29-space "></div>
             }
         </div>
     )

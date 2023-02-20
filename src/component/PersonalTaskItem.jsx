@@ -24,7 +24,7 @@ const PersonalTaskItem = ({ item, index, personalTaskFormList, setPersonalTask, 
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div className="flexRow">
             <div className="form-group" style={{ flex: 2.75 }}>
                 <MySelect
                     value={form}
@@ -34,12 +34,11 @@ const PersonalTaskItem = ({ item, index, personalTaskFormList, setPersonalTask, 
             </div>
             {
                 isLast ?
-                    <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.25 }}>
+                    <button className="personalTaskBtn">
                         <img src={require(`../icon/plusIcon.png`)} alt="+" onClick={addPersonalTask} />
                     </button>
                     :
-                    <div style={{ flex: 0.29 }}> </div>
-
+                    <div className="empty-0-29-space "> </div>
             }
         </div>
     )

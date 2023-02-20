@@ -12,10 +12,8 @@ const Department = connect((user) => ({
     token: user.token,
     hasWriteAuthority: user.role === 3
 }))(({ token, hasWriteAuthority }) => {
-
     const [deparmentList, setDepartmentList] = useState([]);
     const [departmnetForUpdate, setDepartmnetForUpdate] = useState('');
-
     const [modal, setModal] = useState(false);
 
     useEffect(() => {
@@ -62,10 +60,10 @@ const Department = connect((user) => ({
                 {
                     deparmentList &&
                     deparmentList.map((item) => (
-                        <li className="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
-                            <div style={{ flex: 1.5 }}>{item.name} ({item.abbreviation})</div>
-                            <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }} onClick={() => edit(item.id)}>
-                                <img src={editImg} style={{ width: "35px", height: "35px" }} alt="edit" />
+                        <li className="list-group-item flexRow" key={item.id}>
+                            <div className="oneAndHalfFlex">{item.name} ({item.abbreviation})</div>
+                            <button className="transparentBtn" onClick={() => edit(item.id)}>
+                                <img src={editImg} className="transparentEditBtn" alt="edit" />
                             </button>
                         </li>
                     ))

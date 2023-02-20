@@ -38,7 +38,7 @@ const StudyingTypeForm = ({ typeToUpdate, onSave, onCancel }) => {
     return (
         <div className="container">
             <div className="form-group">
-                <label>Text</label>
+                <label>Вид діяльності</label>
                 <MyInputValidator
                     value={typeName}
                     onText={text => setTypeName(text)}
@@ -46,12 +46,12 @@ const StudyingTypeForm = ({ typeToUpdate, onSave, onCancel }) => {
                     className="form-control"
                 />
                 <div className="invalid-feedback">
-                    Index can be only numbers
+                    Може складатися лише з цифр
                 </div>
             </div>
 
             <div className="form-group">
-                <label>Letter</label>
+                <label>Літерне позначення</label>
                 <MyInputValidator
                     value={typeLetter}
                     onText={text => setTypeLetter(text)}
@@ -61,16 +61,13 @@ const StudyingTypeForm = ({ typeToUpdate, onSave, onCancel }) => {
                     check="^[a-zA-Z\s-]*$"
                 />
                 <div className="invalid-feedback">
-                    Index can be only letters
+                    Може складатися лише з літер
                 </div>
             </div>
 
-            <div style={{ textAlign: "center", margin: "5px" }}>
-                <button className="btn btn-info" onClick={saveType}>Save</button>
-                <button className="btn btn-danger" onClick={() => {
-                    clearForm();
-                    cancelBtn();
-                }}>Cancel</button>
+            <div className="text-center m-1">
+                <button className="btn btn-success m-1" onClick={saveType}>Зберегти</button>
+                <button className="btn btn-danger m-1" onClick={cancelBtn}>Відміна</button>
             </div>
         </div>
     )

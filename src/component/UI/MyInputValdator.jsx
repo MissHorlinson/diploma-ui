@@ -2,11 +2,11 @@ import React from 'react';
 import { useState } from 'react';
 
 const MyInputValidator = (props) => {
-    const checkPattern = props.check
-    const onText = props.onText
-    const minLength = props.minLength || 1
-    const className = props.className || ''
-    const [valid, setValid] = useState(null)
+    const checkPattern = props.check;
+    const onText = props.onText;
+    const minLength = props.minLength || 1;
+    const className = props.className || '';
+    const [valid, setValid] = useState(null);
     return (<input
         {...props}
         type="text"

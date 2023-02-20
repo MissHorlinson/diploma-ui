@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert } from '@mui/material';
 import { connect } from "react-redux";
 
@@ -17,16 +17,18 @@ import {
 import {
     getPlanList,
     savePlanInfo,
-    getPlanById
+    getPlanById,
+    saveFullPlanInFile,
+    uploadFileToServer
 } from "../../API/PlanInfoService";
+
+import { logOut } from "../../API/AuthenticationService";
 
 import MyModal from "../UI/MyModal";
 import Loader from "../UI/Loader";
-import MySearch from "../UI/MySearch";
 
 import AllPlanList from "../list/AllPlanList";
 import PlanInfoForm from "../form/PlanInfoForm";
-
 import WeekForm from "../form/WeekForm";
 import Discipline from "./Discipline";
 
@@ -38,55 +40,53 @@ const httpStatusCodes = {
     500: "INTERNAL_SERVER ERROR"
 }
 
-const { ip, port } = require('../../urlConfig.json');
 
 
 const Plan = connect((user) => ({
     token: user.token,
     hasWriteAuthority: user.role < 3,
     hasReadAuthority: user.role > 3 && user.role < 6
-}))(({ token, hasWriteAuthority, hasReadAuthority }) => {
+}), (dispatch) => ({
+    clearToken: () => dispatch({
+        type: "saveData",
+        data: { token: null }
+    })
+}))(({ token, hasWriteAuthority, hasReadAuthority, clearToken }) => {
 
     const [planList, setPlanList] = useState([]);
     const [planToUpdate, setPlanToUpdate] = useState();
-
     const [baseList, setBaseList] = useState([]);
     const [cipherList, setCipherList] = useState([]);
     const [qualificationList, setQualificationList] = useState([]);
     const [stepList, setStepList] = useState([]);
     const [studyingFormList, setStudyingFormList] = useState([]);
     const [studyingTermList, setStudyingTermList] = useState([]);
-
     const [modal, setModal] = useState(false);
-    const [btnClass, setBtnClass] = useState('updateControlBtn');
-    const [filter, setFilter] = useState({ query: '' });
-
     const [isError, setIsError] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
-
-    const [alertType, setAlertType] = useState('');
+    const [alertType, setAlertType] = useState('info');
     const [alertMessage, setAlertMessage] = useState('');
-
-    const [os, setOS] = useState('');
-
-
-
-    const getOs = () => {
-        const os_ = ['Windows', 'Linux', 'Mac']; // add your OS values
-        setOS(os_.find(v => navigator.userAgent.indexOf(v) >= 0));
-    }
+    const [alertVisible, setAlertVisible] = useState('hidden');
 
     useEffect(() => {
         const interval = setInterval(() => {
             setAlertMessage('');
             setAlertType('');
+            setAlertVisible('hidden');
         }, 5000);
         return () => clearInterval(interval);
     }, [alertType, alertMessage])
 
+    const navigate = useNavigate();
     const [fetchData, isListLoading, listError] = useFetching(() => {
         getPlanList(token).then((resp_) => {
-            if (resp_.status !== 200) {
+            if (resp_.status === 401) {
+                logOut().then(() => {
+                    clearToken();
+                    navigate("/login");
+                })
+            }
+            else if (resp_.status !== 200) {
                 setIsError(true);
                 setErrorMsg(httpStatusCodes[resp_.status])
             } else {
@@ -118,7 +118,6 @@ const Plan = connect((user) => ({
 
     useEffect(() => {
         fetchData();
-        getOs();
     }, []);
 
     const savePlan = (planInfo) => {
@@ -130,8 +129,13 @@ const Plan = connect((user) => ({
                 planList[objIndex] = resp_;
                 setPlanList([...planList].sort((a, b) => a.planId - b.planId));
             }
+            setPlanToUpdate('')
             setModal(false)
         })
+    }
+
+    const uploadFromFile = (file) => {
+        uploadFileToServer(file, token).then(resp_ => console.log(resp_));
     }
 
     const getForUpdate = (planId) => {
@@ -142,36 +146,11 @@ const Plan = connect((user) => ({
     }
 
     const loadFile = (planId) => {
-        // console.log(`http://${ip}:${port}/xlsFiles/getFullPlanXlsFile/${planId}`)
-        fetch(`/xlsFiles/getFullPlanXlsFile/${planId}`, {
-            method: "get",
-            headers: {
-                "Authorization": token,
-                "Content-Type": 'application/json'
-            }
-        }).then(res => {
-            if (res.ok) {
-                const head = res.headers.get("content-disposition");
-                const file_ = head.split("=")[1];
-                return res.blob();
-            } else {
-                setAlertType("error");
-                setAlertMessage("ops have some problem");
-            }
-        }).then((blob) => {
-            console.log(blob)
-            const href = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = href;
-            link.setAttribute('download', "plan.xlsx");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            setAlertType("success");
-            setAlertMessage("plan downloaded");
-        }).catch((err) => {
-            return Promise.reject({ Error: 'Something Went Wrong', err });
-        });
+        saveFullPlanInFile(planId, token).then((resp_) => {
+            setAlertType(resp_.type);
+            setAlertMessage(resp_.msg);
+            setAlertVisible("visible");
+        })
     }
 
 
@@ -180,13 +159,13 @@ const Plan = connect((user) => ({
             <Routes>
                 <Route path='' element={
                     <>
-                        <div>
+                        <div style={{ visibility: alertVisible }}>
                             <Alert severity={alertType}>{alertMessage}</Alert>
                         </div>
                         {
                             hasWriteAuthority &&
                             <>
-                                <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Створити план</button>
+                                <button className="btn btn-warning m-1" onClick={() => setModal(true)}>Створити план</button>
                                 <MyModal visible={modal} setVisible={setModal}>
                                     <PlanInfoForm
                                         qualificationList={qualificationList}
@@ -195,10 +174,10 @@ const Plan = connect((user) => ({
                                         cipherList={cipherList}
                                         studyingFormList={studyingFormList}
                                         stepList={stepList}
-                                        btnClass={btnClass}
                                         planToUpdate={planToUpdate}
-                                        onCancel={() => setModal(false)}
-                                        onCreate={savePlan} />
+                                        onCancel={() => { setModal(false); setPlanToUpdate('') }}
+                                        onCreate={savePlan}
+                                        onCreateFromFile={uploadFromFile} />
                                 </MyModal>
                             </>
                         }
@@ -208,7 +187,6 @@ const Plan = connect((user) => ({
                                 ? <Loader />
                                 :
                                 <div>
-                                    <MySearch filter={filter} setFilter={setFilter} />
                                     {
                                         isError ?
                                             <div className="alert alert-primary text-center">{errorMsg}</div>
@@ -233,14 +211,14 @@ const Plan = connect((user) => ({
                 </Route>
                 <Route path=':planId/weeks' element={
                     <>
-                        <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}>{"\<- Список планів"}</Link>
+                        <Link to='..' className="btn btn-primary m-2">{"\<- Список планів"}</Link>
                         <WeekForm />
                     </>
                 }>
                 </Route>
                 <Route path=':planId/disciplines' element={
                     <>
-                        <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}>{"\<- Список планів"}</Link>
+                        <Link to='..' className="btn btn-primary m-2">{"\<- Список планів"}</Link>
                         <Discipline />
                     </>
                 }>

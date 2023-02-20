@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import "./listStyle.css";
-
 const AllPlanList = ({ planList, onUpdate, onLoad, hasWriteAuthority, hasReadAuthority }) => {
     return (
         <div className="container">
@@ -40,8 +38,8 @@ const AllPlanList = ({ planList, onUpdate, onLoad, hasWriteAuthority, hasReadAut
                             {
                                 hasWriteAuthority &&
                                 <div className="bodyItem text-center">
-                                    <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }}>
-                                        <img src={require(`../../icon/editIcon.png`)} style={{ width: "35px", height: "35px" }} alt="edit" onClick={() => onUpdate(item.planId)} />
+                                    <button className="transparentBtn">
+                                        <img src={require(`../../icon/editIcon.png`)} className="transparentEditBtn" alt="edit" onClick={() => onUpdate(item.planId)} />
                                     </button>
                                 </div>
                             }

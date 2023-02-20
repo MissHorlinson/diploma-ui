@@ -1,15 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import MyInputValidator from "../UI/MyInputValdator";
 import MySelect from "../UI/MySelect";
 
-const CreateUserForm = ({ roleList, statusList, onSave, onCancel }) => {
+const CreateUserForm = ({ roleList, statusList, onSave, onCancel, userToUpdate }) => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState(4);
     const [status, setStatus] = useState(0);
 
+    useEffect(() => {
+        if (userToUpdate) {
+            setUsername(userToUpdate.username);
+            const roleInx = roleList.findIndex(({ name }) => name === userToUpdate.role);
+            setRole(roleInx);
+            const statusInx = statusList.findIndex(({ name }) => name === userToUpdate.status);
+            setStatus(statusInx);
+        }
+    }, [userToUpdate])
 
     const clearForm = () => {
         setUsername('');
@@ -19,7 +28,14 @@ const CreateUserForm = ({ roleList, statusList, onSave, onCancel }) => {
     }
 
     const saveUser = () => {
+        const newUserCred = {
+            username: username,
+            role: role,
+            status: status,
+            password: password
+        }
 
+        onSave(newUserCred);
     }
 
     const cancelBtn = () => {
@@ -34,11 +50,11 @@ const CreateUserForm = ({ roleList, statusList, onSave, onCancel }) => {
                 <MyInputValidator
                     value={username}
                     onText={text => setUsername(text)}
-                    placeholder="логін"
+                    placeholder="Логін"
                     className="form-control"
                     check="[А-Я][а-я]*$" />
                 <div className="invalid-feedback">
-                    Can be only numbers
+                    Може складатися лише з літер
                 </div>
             </div>
             <div className="form-group">
@@ -48,9 +64,9 @@ const CreateUserForm = ({ roleList, statusList, onSave, onCancel }) => {
                     onText={text => setPassword(text)}
                     placeholder="Пароль"
                     className="form-control"
-                    check="[А-Я][а-я]*$" />
+                    check="[А-Я][а-я][0-9]*$" />
                 <div className="invalid-feedback">
-                    Can be only numbers
+                    Повинен складатися з цифр та літер
                 </div>
             </div>
 
@@ -59,7 +75,7 @@ const CreateUserForm = ({ roleList, statusList, onSave, onCancel }) => {
                 <MySelect
                     value={role}
                     onChange={(type) => setRole(type)}
-                    defaultValue=""
+                    defaultValue="Роль"
                     options={roleList} />
             </div>
             <div className="form-group">
@@ -67,17 +83,16 @@ const CreateUserForm = ({ roleList, statusList, onSave, onCancel }) => {
                 <MySelect
                     value={status}
                     onChange={(type) => setStatus(type)}
-                    defaultValue="статус"
+                    defaultValue="Статус"
                     options={statusList} />
             </div>
 
-            <div style={{ textAlign: "center", margin: "5px" }}>
-                <button className="btn btn-info" onClick={saveUser}>Save</button>
-                <button className="btn btn-danger" onClick={() => cancelBtn()}>Cancel</button>
+            <div className="formBtnStyle">
+                <button className="btn btn-success m-1" onClick={saveUser}>Зберегти</button>
+                <button className="btn btn-danger m-1" onClick={cancelBtn}>Відміна</button>
             </div>
         </div>
     )
-
 }
 
 export default CreateUserForm;

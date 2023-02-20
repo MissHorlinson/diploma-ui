@@ -103,7 +103,6 @@ const DisciplineForm = ({
     }
 
     const removeAuditoryHours = (index) => {
-        console.log("delete click ", index, auditoryHours)
         auditoryHours.splice(index, 1);
         setAuditoryHours([...auditoryHours])
     }
@@ -179,6 +178,7 @@ const DisciplineForm = ({
     }
 
     const cancelBtn = () => {
+        clearForm();
         onCancel();
     }
 
@@ -233,26 +233,26 @@ const DisciplineForm = ({
             <div className="form-group">
                 <label>Название дисциплины</label>
                 {/* <div style={{ display: subjectNameVisible }}> */}
-                <div style={{ display: "flex", flexDirection: "row" }}>
+                <div className="flexRow">
                     <MySelect
                         value={subjectName}
                         onChange={type => setSubjectName(type)}
                         defaultValue="Название дисциплины"
                         options={subjectNameList} />
-                    <button style={{ backgroundColor: "transparent", borderColor: "transparent" }}>
+                    <button className="transparentBtn">
                         <img src={require(`../../icon/plusIcon.png`)} alt="+" onClick={addSubjectName} />
                     </button>
                 </div>
                 {/* </div> */}
                 <div style={{ display: addSubjectNameVisible }}>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div className="flexRow">
                         <MyInputValidator
                             value={subjectNameForSave}
                             onText={text => setSubjectNameForSave(text)}
                             placeholder="Название предмета"
                             className="form-control"
                             check="[a-z A-Z]*$" />
-                        <button style={{ backgroundColor: "transparent", borderColor: "transparent" }}>
+                        <button className="transparentBtn">
                             <img src={require(`../../icon/checkIcon.png`)} alt="+" onClick={saveSubjectName} />
                         </button>
                     </div>
@@ -349,12 +349,9 @@ const DisciplineForm = ({
                     </div>
             }
 
-            <div style={{ textAlign: "center", margin: "5px" }}>
-                <button className="btn btn-info" onClick={saveDiscipline}>Save</button>
-                <button className="btn btn-danger" onClick={() => {
-                    clearForm();
-                    cancelBtn();
-                }}>Cancel</button>
+            <div className="text-center m-1">
+                <button className="btn btn-success m-1" onClick={saveDiscipline}>Зберегти</button>
+                <button className="btn btn-danger m-1" onClick={cancelBtn}>Відміна</button>
             </div>
         </div >
     )

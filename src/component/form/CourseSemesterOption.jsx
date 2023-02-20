@@ -9,6 +9,11 @@ const CourseSemesterOption = ({ option, download, onCancel }) => {
         setNum('');
     }
 
+    const cancelBtn = () => {
+        clearStates();
+        onCancel();
+    }
+
     return (
         <div className="container">
             <div className="form-group">
@@ -20,16 +25,13 @@ const CourseSemesterOption = ({ option, download, onCancel }) => {
                     check="[0-9]"
                 />
                 <div className="invalid-feedback">
-                    Can contain onle numbers
+                    Може складатися лише з цифр
                 </div>
             </div>
 
-            <div>
-                <button className="btn btn-success" style={{ margin: "5px" }} onClick={() => download(num)}>Download</button>
-                <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => {
-                    clearStates();
-                    onCancel();
-                }}>Cancel</button>
+            <div className="text-center m-1">
+                <button className="btn btn-success m-1" onClick={() => download(num)}>Завантажити</button>
+                <button className="btn btn-danger m-1" onClick={cancelBtn}>Відміна</button>
             </div>
         </div>
     )

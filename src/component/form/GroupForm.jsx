@@ -1,27 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
-
 import MySelect from "../UI/MySelect";
 import MyInputValidator from "../UI/MyInputValdator";
 
-const initialVal = {
-    name: '',
-    admissionYear: '',
-    index: '',
-    facultyGroup: { id: '' }
-}
 
-const GroupForm = ({ onSave, cipherList, groupToUpdate, btnClass, onCancel }) => {
+const GroupForm = ({ onSave, cipherList, groupToUpdate, onCancel }) => {
 
     const [groupCipher, setGroupCipher] = useState('');
     const [groupIndex, setGroupIndex] = useState('');
     const [groupYear, setGroupYear] = useState('');
+    const [groupId, setGroupId] = useState(null);
 
     useEffect(() => {
         if (groupToUpdate) {
+            setGroupId(groupToUpdate.id)
             setGroupIndex(groupToUpdate.index);
             setGroupCipher(groupToUpdate.groupCipherId);
-            setGroupYear(groupToUpdate.admissionYear?.replace("T00:00:00", ""));
+            setGroupYear(groupToUpdate.admissionYear?.replace("T00:00", ""));
         }
     }, [groupToUpdate])
 
@@ -33,32 +28,39 @@ const GroupForm = ({ onSave, cipherList, groupToUpdate, btnClass, onCancel }) =>
         setGroupIndex('');
         setGroupYear('');
         setGroupCipher('');
+        setGroupId(null);
     }
 
     const saveGroup = (e) => {
         e.preventDefault();
         const newGroup = ({
-            groupCipher: { id: groupCipher },
+            id: groupId,
+            groupCipherId: groupCipher,
             index: groupIndex,
             admissionYear: groupYear + "T00:00:00"
         })
         onSave(newGroup);
     }
 
+    const cancelBtn = () => {
+        clearStates();
+        onCancel();
+    }
+
     return (
         <div className="container">
             <div className="form-group">
-                <label>Name</label>
+                <label>Шифр</label>
                 <MySelect
                     value={groupCipher}
                     onChange={(type) => setGroupCipher(type)}
-                    defaultValue="Cipher"
+                    defaultValue="Шифр"
                     options={cipherList}
                 />
             </div>
 
             <div className="form-group">
-                <label>Admission Year</label>
+                <label>Рік вступу</label>
                 <input
                     type="date"
                     value={groupYear.replace('T00:00', '')}
@@ -67,26 +69,23 @@ const GroupForm = ({ onSave, cipherList, groupToUpdate, btnClass, onCancel }) =>
             </div>
 
             <div className="form-group">
-                <label>Group Index</label>
+                <label>Індекс групи</label>
                 <MyInputValidator
                     value={groupIndex}
                     onText={text => setGroupIndex(text)}
                     name="index"
-                    placeholder="Index"
+                    placeholder="Індекс"
                     className="form-control"
                     check="^[0-9-]*$"
                 />
                 <div className="invalid-feedback">
-                    Index can be only numbers
+                    Індекс може складатися лише з цифр
                 </div>
             </div>
 
-            <div className={btnClass}>
-                <button className="btn btn-success" style={{ margin: "5px" }} onClick={saveGroup}>Save</button>
-                <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => {
-                    clearStates();
-                    onCancel()
-                }}>Cancel</button>
+            <div className="text-center m-1">
+                <button className="btn btn-success m-1" onClick={saveGroup}>Зберегти</button>
+                <button className="btn btn-danger m-1" onClick={cancelBtn}>Відміна</button>
             </div>
         </div>
     );

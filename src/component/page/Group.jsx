@@ -9,7 +9,6 @@ import { getGroupList, saveGroupData, getGroupById } from '../../API/GroupServic
 
 import Loader from '../UI/Loader';
 import MyModal from '../UI/MyModal';
-import MySearch from '../UI/MySearch';
 
 import GroupForm from '../form/GroupForm';
 import AllGroupList from '../list/AllGroupList';
@@ -25,20 +24,13 @@ const httpStatusCodes = {
 
 const Group = connect((user) => ({
     token: user.token,
-    hasWriteAuthority: user.role < 3,
-    hasReadAuthority: user.role > 3 && user.role < 6
+    hasWriteAuthority: user.role < 3
 }))
-    (({ token, hasWriteAuthority, hasReadAuthority }) => {
+    (({ token, hasWriteAuthority }) => {
 
-
-        const [filter, setFilter] = useState({ query: '' });
         const [groupToUpdate, setGroupToupdate] = useState('');
-        const [btnClass, setBtnClass] = useState('updateControlBtn');
         const [listForFront, setListForFront] = useState([]);
         const [facultyList, setFacultyList] = useState([]);
-
-
-
         const [groupList, setGroupList] = useState([]);
         const [modal, setModal] = useState(false);
         const [cipherList, setCipherList] = useState([]);
@@ -62,9 +54,6 @@ const Group = connect((user) => ({
             fetchGruoup()
         }, [])
 
-        useEffect(() => {
-            searchGoup()
-        }, [listForFront, filter])
 
         const saveGroup = (data) => {
             saveGroupData(data, token).then((resp_) => {
@@ -85,17 +74,6 @@ const Group = connect((user) => ({
                 setModal(true);
             });
         }
-
-        const viewGroup = (id) => {
-            getForUpdate(id);
-            setBtnClass('viewControlBtn');
-        }
-
-        const searchGoup = () => {
-            return setGroupList(listForFront.filter((item) => item.name.toLowerCase().includes(filter.query.toLowerCase())));
-        }
-
-
         return (
             <div>
                 <Routes>
@@ -104,14 +82,13 @@ const Group = connect((user) => ({
                             {
                                 hasWriteAuthority &&
                                 <>
-                                    <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Create Group</button>
+                                    <button className="btn btn-warning m-2" onClick={() => setModal(true)}>Додати групу</button>
                                     <MyModal visible={modal} setVisible={setModal}>
                                         <GroupForm
                                             onSave={saveGroup}
                                             cipherList={cipherList}
                                             facultyList={facultyList}
                                             groupToUpdate={groupToUpdate}
-                                            btnClass={btnClass}
                                             onCancel={() => setModal(false)}
                                         />
                                     </MyModal>
@@ -125,20 +102,18 @@ const Group = connect((user) => ({
                             {isListLoading
                                 ? <Loader />
                                 : <div>
-                                    <MySearch filter={filter} setFilter={setFilter} onFilter={searchGoup} />
                                     <AllGroupList
                                         groupList={groupList}
-                                        title="GroupList"
-                                        hasWriteAuthority={hasWriteAuthority}
                                         onUpdate={getForUpdate}
-                                        onView={viewGroup} />
+                                        hasWriteAuthority={hasWriteAuthority}
+                                    />
                                 </div>
                             }
                         </>}>
                     </Route>
                     <Route path=':id/students' element={
                         <>
-                            <Link to='..' className="btn btn-primary" style={{ margin: '10px' }}> {"\<- Список груп"}</Link>
+                            <Link to='..' className="btn btn-primary m-2"> {"\<- Список груп"}</Link>
                             <StudentInGroup />
                         </>
                     }></Route>

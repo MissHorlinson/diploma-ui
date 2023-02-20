@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import "./listStyle.css";
 
 const AllGroupList = ({ groupList, onUpdate, hasWriteAuthority }) => {
     return (
@@ -8,11 +7,10 @@ const AllGroupList = ({ groupList, onUpdate, hasWriteAuthority }) => {
             <div className="titleRow">
                 <div className="headItemTitle">Группа</div>
                 <div className="headItemTitle">Студенты</div>
-                {/* <div className="headItemTitle">Планы</div> */}
-                {/* {
-                    hasWriteAuthority && <div className="headItemTitle">Action</div>
-                } */}
-
+                {
+                    hasWriteAuthority &&
+                    <div className="headItemTitle"></div>
+                }
             </div>
 
             <div className="bodyContainer">
@@ -24,12 +22,11 @@ const AllGroupList = ({ groupList, onUpdate, hasWriteAuthority }) => {
                             <div className="bodyItem text-center">
                                 <Link className="btn btn-secondary actionBtn" to={"./" + item.id + "/students"}>Студенты</Link>
                             </div>
-                            {/* <div className="bodyItem text-center"><button>Save plan</button></div> */}
                             {
                                 hasWriteAuthority &&
                                 <div className="bodyItem text-center">
-                                    <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }}>
-                                        <img src={require(`../../icon/editIcon.png`)} style={{ width: "35px", height: "35px" }} alt="edit" onClick={() => onUpdate(item.id)} />
+                                    <button className="transparentBtn">
+                                        <img src={require(`../../icon/editIcon.png`)} className="transparentEditBtn" alt="edit" onClick={() => onUpdate(item.id)} />
                                     </button>
                                 </div>
                             }

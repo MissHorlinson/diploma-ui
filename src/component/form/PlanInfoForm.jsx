@@ -4,10 +4,15 @@ import MyInputValidator from "../UI/MyInputValdator";
 import MySelect from "../UI/MySelect";
 
 
-const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherList, studyingFormList, stepList, btnClass, planToUpdate, onCancel, onCreate }) => {
+const PlamInfoForm = ({ qualificationList,
+    studyingTermList,
+    baseList, cipherList,
+    studyingFormList, stepList,
+    planToUpdate,
+    onCancel,
+    onCreate,
+    onCreateFromFile }) => {
 
-    const [planInfo, setPlanInfo] = useState({});
-    const [rector, setRector] = useState('');
     const [qualification, setQualification] = useState('');
     const [term, setTerm] = useState('');
     const [base, setBase] = useState('');
@@ -18,8 +23,22 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
     const [groupNum, setGroupNum] = useState('');
     const [studentNum, setStudentNum] = useState('');
 
+    const [planFile, setPlanFile] = useState("");
+
     const [semesterCheck, setSemesterCheck] = useState([{ isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }, { isCheck: false }])
 
+
+    const enableByField = term > 0 &&
+        base > 0 &&
+        step > 0 &&
+        cipher > 0 &&
+        form > 0 &&
+        year.length > 0 &&
+        qualification > 0;
+
+    const enableByFile = planFile;
+
+    const [fileInput, setFileInput] = useState("none");
 
     useEffect(() => {
         if (planToUpdate) {
@@ -29,7 +48,7 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
             setStep(planToUpdate.stepId);
             setCipher(planToUpdate.planCipherId);
             setForm(planToUpdate.studyingFormId);
-            setYear(planToUpdate.admissionYear?.replace("T00:00:00", ""));
+            setYear(planToUpdate.admissionYear?.replace("T00:00", ""));
             setGroupNum(planToUpdate.numberOfGroup);
             setStudentNum(planToUpdate.numberOfStudent);
             setSemesterCheck([...Array(planToUpdate.numberOfSemester).keys()].map((value_, index_) => ({
@@ -44,6 +63,24 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
         clearStates();
     }, [])
 
+    useEffect(() => {
+        if (term) {
+            setSemesterCheck([]);
+            setSemesterCheck([...Array(studyingTermList[term - 1].semesterNum).keys()].map((value_, index_) => ({
+                isCheck: true,
+                key: value_ + 1,
+                value: value_ + 1,
+            })))
+        }
+    }, [term])
+
+    useEffect(() => {
+        if (qualification) {
+            let stepId = stepList[qualification - 1]?.id;
+            setStep(stepId.toString())
+        }
+    }, [qualification])
+
     const clearStates = () => {
         setQualification('');
         setTerm('');
@@ -54,28 +91,40 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
         setYear('');
         setGroupNum('');
         setStudentNum('');
-        setSemesterCheck([])
+        setSemesterCheck([]);
+        setPlanFile('');
+        document.getElementById("planFileInput").value = '';
+        setFileInput('none');
     }
 
     const createFllPlanInfo = (e) => {
         e.preventDefault();
-        let day = year.split('T');
-        let planId = planToUpdate ? planToUpdate.planId : null
-        const fullPlan = {
-            id: planId,
-            rector: "rector",
-            qualification: { id: qualification },
-            studyingTerm: { id: term },
-            base: { id: base },
-            step: { id: step },
-            planCipher: { id: cipher },
-            studyingForm: { id: form },
-            admissionYear: day[0] + 'T00:00:00',
-            numberOfGroup: groupNum,
-            numberOfStudent: studentNum,
-            numberOfSemester: semesterCheck.length
+
+        if (planFile) {
+            var formdata = new FormData();
+            formdata.append("file", planFile);
+            onCreateFromFile(formdata)
+        } else {
+            let day = year.split('T');
+            let planId = planToUpdate ? planToUpdate.planId : null
+
+            console.log(planToUpdate, planId)
+
+            const fullPlan = {
+                planId: planId,
+                qualificationId: qualification,
+                studyingTermId: term,
+                baseId: base,
+                stepId: step,
+                planCipherId: cipher,
+                studyingFormId: form,
+                admissionYear: day[0] + 'T00:00:00',
+                numberOfGroup: groupNum,
+                numberOfStudent: studentNum,
+                numberOfSemester: semesterCheck.length
+            }
+            onCreate(fullPlan);
         }
-        onCreate(fullPlan);
         clearStates();
     }
 
@@ -88,17 +137,23 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
         }
     }
 
+    const handleFileChange = (e) => {
+        if (e.target.files) {
+            setPlanFile(e.target.files[0]);
+        }
+    };
+
+    const loadFromFile = () => {
+        setFileInput("inline")
+    }
+
+    const cancelBtn = () => {
+        clearStates();
+        onCancel();
+    }
+
     return (
         <div className="container">
-            {/* <div className="form-group">
-                <label>Ректор</label>
-                <MySelect
-                    value={rector}
-                    onChange={rectorSet}
-                    defaultValue="Ректор"
-                    options={rectorList} />
-            </div> */}
-
             <div className="form-group">
                 <label>Кваліфікація</label>
                 <MySelect
@@ -158,13 +213,12 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <input
                     type="date"
                     value={year}
-                    // value={planInfo?.admissionYear.replace('T00:00', '')}
                     onChange={e => setYear(e.target.value)}
                     className="form-control" />
             </div>
 
-            <div style={{ display: "flex", flexDirection: "row" }}>
-                <div className="form-group" style={{ flex: 1, marginInline: 2 }}>
+            <div className="flexRow">
+                <div className="form-group oneFlex m-1">
                     <label>Кількість груп</label>
                     <MyInputValidator
                         value={groupNum}
@@ -174,11 +228,11 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                         className="form-control"
                         check="^[0-9]+" />
                     <div className="invalid-feedback">
-                        Can be only numbers
+                        Може включати лише цифри
                     </div>
                 </div>
 
-                <div className="form-group" style={{ flex: 1, marginInline: 2 }}>
+                <div className="form-group oneFlex m-1">
                     <label>Кількість студентів</label>
                     <MyInputValidator
                         value={studentNum}
@@ -188,7 +242,7 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                         className="form-control"
                         check="^[0-9]+" />
                     <div className="invalid-feedback">
-                        can be only numbers
+                        Може включати лише цифри
                     </div>
                 </div>
             </div>
@@ -198,95 +252,41 @@ const PlamInfoForm = ({ qualificationList, studyingTermList, baseList, cipherLis
                 <label>Оберіть семестри</label>
                 <hr />
                 <div>
-                    <div className="form-check form-check-inline">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="1"
-                            checked={semesterCheck[0]?.isCheck}
-                            onChange={() => { setSemester(1) }} />
-                        <label className="form-check-label">1</label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="2"
-                            checked={semesterCheck[1]?.isCheck}
-                            onChange={() => setSemester(2)} />
-                        <label className="form-check-label">2</label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="3"
-                            checked={semesterCheck[2]?.isCheck}
-                            onChange={() => setSemester(3)} />
-                        <label className="form-check-label">3</label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="4"
-                            checked={semesterCheck[3]?.isCheck}
-                            onChange={() => { setSemester(4) }} />
-                        <label className="form-check-label">4</label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="5"
-                            checked={semesterCheck[4]?.isCheck}
-                            onChange={() => { setSemester(5) }} />
-                        <label className="form-check-label">5</label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="6"
-                            checked={semesterCheck[5]?.isCheck}
-                            onChange={() => { setSemester(6) }} />
-                        <label className="form-check-label">6</label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="7"
-                            checked={semesterCheck[6]?.isCheck}
-                            onChange={() => { setSemester(7) }} />
-                        <label className="form-check-label">7</label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="8"
-                            checked={semesterCheck[7]?.isCheck}
-                            onChange={() => { setSemester(8) }} />
-                        <label className="form-check-label">8</label>
-                    </div>
+                    {
+                        [...Array(8).keys()].map(i =>
+                            <div className="form-check form-check-inline" key={i}>
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    id={i}
+                                    checked={semesterCheck[i]?.isCheck}
+                                    onChange={() => { setSemester(i + 1) }} />
+                                <label className="form-check-label">{i + 1}</label>
+                            </div>
+                        )
+                    }
                 </div>
                 <hr />
             </div>
 
-            <div className={btnClass}>
-                <button className="btn btn-success" style={{ margin: "5px" }} onClick={createFllPlanInfo}>Save</button>
-                <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => {
-                    clearStates();
-                    onCancel()
-                }}>Cancel</button>
+            <div style={{ display: fileInput }}>
+                <input
+                    type="file"
+                    accept=".xls,.xlsx"
+                    id="planFileInput"
+                    onChange={handleFileChange} />
+            </div>
+
+            <div className="text-center">
+                <button className="btn btn-info m-1" onClick={loadFromFile}>Завантажти з файлу</button>
+            </div>
+
+            <div className="text-center m-1">
+                {
+                    (enableByField || enableByFile) &&
+                    <button className="btn btn-success m-1" onClick={createFllPlanInfo}>Зберегти</button>
+                }
+                <button className="btn btn-danger m-1" onClick={cancelBtn}>Відміна</button>
             </div>
         </div >
     );

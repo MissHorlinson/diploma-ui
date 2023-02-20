@@ -38,8 +38,7 @@ const otherPath = [
     { name: "Каферда", path: "/department" },
 ]
 
-
-
+const ffeksLogo = require(`../../icon/ffeks_logo.png`);
 
 const Header = connect((data) => ({
     isAuth: Boolean(data.token),
@@ -63,44 +62,47 @@ const Header = connect((data) => ({
     return (
         <header>
             <nav className="navbar navbar-dark bg-dark">
-                <div className="navbar-brand" style={{ margin: '10px' }}>Department Management App</div>
+                <div className="navbar-brand m-2">
+                    {/* <img src={ffeksLogo} className="logoStyle" /> */}
+                    Кафедра ЕОМ
+                </div>
                 {
                     isAuth &&
                         authority === 3 ?
-                        <div style={{ display: "flex" }}>
+                        <div className="flex-display">
                             <DropdownButton id="btn-dropdown-plan" title="Загальні відомості плану" drop="end" variant="secondary" className="mx-2">
                                 {
-                                    generalPlanDataPath.map(({ name, path }, i) => <Dropdown.Item href={path} eventKey={i}>{name}</Dropdown.Item>)
+                                    generalPlanDataPath.map(({ name, path }, i) => <Dropdown.Item href={path} eventKey={i} key={i}>{name}</Dropdown.Item>)
                                 }
                             </DropdownButton>
 
                             <DropdownButton id="btn-dropdown-discipline" title="Дисціпліна" drop="end" variant="secondary" className="mx-2">
                                 {
-                                    disciplineDataPath.map(({ name, path }, i) => <Dropdown.Item href={path} eventKey={i}>{name}</Dropdown.Item>)
+                                    disciplineDataPath.map(({ name, path }, i) => <Dropdown.Item href={path} eventKey={i} key={i}>{name}</Dropdown.Item>)
                                 }
                             </DropdownButton>
 
                             <DropdownButton id="btn-dropdown-other" title="Інше" drop="end" variant="secondary" className="mx-2">
                                 {
-                                    otherPath.map(({ name, path }, i) => <Dropdown.Item href={path} eventKey={i}>{name}</Dropdown.Item>)
+                                    otherPath.map(({ name, path }, i) => <Dropdown.Item href={path} eventKey={i} key={i}>{name}</Dropdown.Item>)
                                 }
                             </DropdownButton>
 
                             <Link to={`/admin`} className="nav-link link-info link_style">Адмін</Link>
                         </div>
                         :
-                        <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div className="flexRow">
                             {
                                 pathList[authority].map(({ name, path }, i) => <Link to={`${path.toLowerCase().replace(" ", "")}`} className="nav-link link-info link_style" key={i}>{name}</Link>)
                             }
                         </div>
                 }
 
-                <div style={{ position: 'relative', right: '50px' }}>
+                <div className="logoutBtn">
                     <button className="btn btn-secondary" onClick={logout}>Logout</button>
                 </div>
             </nav>
-        </header>
+        </header >
     );
 });
 

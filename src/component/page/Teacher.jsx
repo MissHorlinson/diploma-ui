@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
+import { useNavigate } from "react-router";
 
 import { useFetching } from "../../hooks/useFetching";
 
 import { getDepartment } from "../../API/UtilDataService";
-
 import { getTeacherById, saveTeacherData, getAllTeachers } from "../../API/GroupService";
+import { logOut } from "../../API/AuthenticationService";
 
 import MyModal from "../UI/MyModal";
 import TeacherForm from "../form/TeacherForm";
@@ -22,23 +23,30 @@ const httpStatusCodes = {
 const Teacher = connect((user) => ({
     token: user.token,
     hasWriteAuthority: user.role < 3
-}))(({ token, hasWriteAuthority }) => {
+}), (dispatch) => ({
+    clearToken: () => dispatch({
+        type: "saveData",
+        data: { token: null }
+    })
+}))(({ token, hasWriteAuthority, clearToken }) => {
 
     const [departmentList, setDepartmentList] = useState([]);
-
     const [teacherList, setTeacherList] = useState([]);
-
     const [teacherToUpdate, setTeacherToUpdate] = useState('');
-
     const [modal, setModal] = useState(false);
-    const [btnClass, setBtnClass] = useState('updateControlBtn');
-
     const [isError, setIsError] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
 
+    const navigate = useNavigate();
+
     const [fetchTeacherData, isListLoading, listError] = useFetching(async () => {
         getAllTeachers(token).then((resp_) => {
-            if (resp_.status !== 200) {
+            if (resp_.status === 401) {
+                logOut().then(() => {
+                    clearToken();
+                    navigate("/login");
+                })
+            } else if (resp_.status !== 200) {
                 setIsError(true);
                 setErrorMsg(httpStatusCodes[resp_.status])
             } else {
@@ -77,14 +85,13 @@ const Teacher = connect((user) => ({
 
     return (
         <div className="container">
-            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => {
+            <button className="btn btn-warning m-1" onClick={() => {
                 setModal(true)
-            }}>Add Teacher</button>
+            }}>Додати викладача</button>
             <MyModal visible={modal} setVisible={setModal}>
                 <TeacherForm
                     onSave={saveTeacher}
                     teacherToUpdate={teacherToUpdate}
-                    btnClass={btnClass}
                     onCancel={() => setModal(false)}
                     departmentList={departmentList}
                 />

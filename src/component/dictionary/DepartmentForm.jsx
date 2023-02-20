@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import MyInputValidator from "../UI/MyInputValdator";
 
 const DepartmentForm = ({ departmnetForUpdate, onSave, onCancel }) => {
-
     const [departName, setDepartName] = useState('');
     const [departLetter, setDepartLetter] = useState('');
     const [departInx, setDepartInx] = useState('');
@@ -38,7 +37,7 @@ const DepartmentForm = ({ departmnetForUpdate, onSave, onCancel }) => {
     return (
         <div className="container">
             <div className="form-group">
-                <label>Text</label>
+                <label>Назва</label>
                 <MyInputValidator
                     value={departName}
                     onText={text => setDepartName(text)}
@@ -46,31 +45,31 @@ const DepartmentForm = ({ departmnetForUpdate, onSave, onCancel }) => {
                     className="form-control"
                 />
                 <div className="invalid-feedback">
-                    Index can be only numbers
+                    Назва може складатися лише з літер
                 </div>
             </div>
 
             <div className="form-group">
-                <label>Abbreviation</label>
+                <label>Абревіатура</label>
                 <MyInputValidator
                     value={departLetter}
                     onText={text => setDepartLetter(text)}
                     name="abbreviation"
-                    placeholder="Abbreviation"
+                    placeholder="Абревіатура"
                     className="form-control"
                     check="^[A-Z\s-]*$"
                 />
                 <div className="invalid-feedback">
-                    Index can be only letters
+                    Абревіатура може складатися лише з літер
                 </div>
             </div>
 
-            <div style={{ textAlign: "center", margin: "5px" }}>
-                <button className="btn btn-info" onClick={saveDepart}>Save</button>
-                <button className="btn btn-danger" onClick={() => {
+            <div className="text-center m-1">
+                <button className="btn btn-success m-1" onClick={saveDepart}>Зберегти</button>
+                <button className="btn btn-danger m-1" onClick={() => {
                     clearForm();
                     cancelBtn();
-                }}>Cancel</button>
+                }}>Відміна</button>
             </div>
         </div>
     )

@@ -35,7 +35,6 @@ const Discipline = connect((user) => ({
     const [semestNum, setSemesterNum] = useState(0);
 
     const [modal, setModal] = useState(false);
-    const [btnClass, setBtnClass] = useState('updateControlBtn');
 
     const [isError, setIsError] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
@@ -97,7 +96,7 @@ const Discipline = connect((user) => ({
 
     return (
         <div className="container">
-            <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => { setDisciplineForUpdate(null); setModal(true) }}>створити дисципліну</button>
+            <button className="btn btn-warning m-3" onClick={() => { setDisciplineForUpdate(null); setModal(true) }}>Створити дисципліну</button>
             <MyModal visible={modal} setVisible={setModal}>
                 <DisciplineForm
                     disciplineTypeList={disciplineTypeList}
@@ -108,7 +107,6 @@ const Discipline = connect((user) => ({
                     departmentList={departmentList}
                     semesterNum={semestNum}
                     disciplineForUpdate={disciplineForUpdate}
-                    btnClass={btnClass}
                     onCancel={() => setModal(false)}
                     onCreate={saveDiscipline}
                     token={token}

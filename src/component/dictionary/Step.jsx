@@ -8,19 +8,13 @@ import MyInputValidator from "../UI/MyInputValdator";
 const editImg = require(`../../icon/editIcon.png`);
 const saveImg = require(`../../icon/checkIcon.png`);
 
-
-
 const Step = connect((user) => ({
     token: user.token,
     hasWriteAuthority: user.role === 3
-}))(({ token, hasWriteAuthority }) => {
-
-
+}))(({ token }) => {
     const [stepList, setStepList] = useState([]);
-
     const [stepToUpdate, setStepToUpdate] = useState('');
     const [stepToUpdateInx, setStepToUpdateInx] = useState('');
-
     const [needUpd, setNeedUpd] = useState(false);
 
     useEffect(() => {
@@ -54,12 +48,12 @@ const Step = connect((user) => ({
 
     return (
         <div className="container">
-            <h3 className="text-center py-2">Ступінь</h3>
+            <h3 className="text-center py-2">Підготовка</h3>
             <ul className="list-group list-group-flush">
                 {
                     stepList &&
                     stepList.map((item) => (
-                        <li className="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
+                        <li className="list-group-item flexRow" key={item.id}>
                             {
                                 needUpd && stepToUpdateInx === item.id ?
                                     <>
@@ -69,21 +63,18 @@ const Step = connect((user) => ({
                                             className="form-control"
                                             check="[a-z]*$"
                                         />
-                                        <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }} onClick={() => save()} >
-                                            <img src={saveImg} style={{ width: "35px", height: "35px" }} alt="edit" />
+                                        <button className="transparentBtn" onClick={() => save()} >
+                                            <img src={saveImg} className="transparentEditBtn" alt="edit" />
                                         </button>
                                     </>
                                     :
                                     <>
-                                        <div style={{ flex: 1.5 }}>{item.name}</div>
-                                        <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }} onClick={() => edit(item)}>
-                                            <img src={editImg} style={{ width: "35px", height: "35px" }} alt="edit" />
+                                        <div className="oneAndHalfFlex">{item.name}</div>
+                                        <button className="transparentBtn" onClick={() => edit(item)}>
+                                            <img src={editImg} className="transparentEditBtn" alt="edit" />
                                         </button>
-
                                     </>
                             }
-
-
                         </li>
                     ))
                 }

@@ -9,18 +9,13 @@ const editImg = require(`../../icon/editIcon.png`);
 const saveImg = require(`../../icon/checkIcon.png`);
 
 
-
 const DisciplineType = connect((user) => ({
     token: user.token,
     hasWriteAuthority: user.role === 3
-}))(({ token, hasWriteAuthority }) => {
-
-
+}))(({ token }) => {
     const [disciplineTypeList, setDisciplineTypeList] = useState([]);
-
     const [disciplineTypeToUpdate, setDisciplineTypeToUpdate] = useState('');
     const [disciplineTypeToUpdateInx, setDisciplineTypeToUpdateInx] = useState('');
-
     const [needUpd, setNeedUpd] = useState(false);
 
     useEffect(() => {
@@ -59,7 +54,7 @@ const DisciplineType = connect((user) => ({
                 {
                     disciplineTypeList &&
                     disciplineTypeList.map((item) => (
-                        <li className="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
+                        <li className="list-group-item flexRow" key={item.id}>
                             {
                                 needUpd && disciplineTypeToUpdateInx === item.id ?
                                     <>
@@ -69,15 +64,15 @@ const DisciplineType = connect((user) => ({
                                             className="Type-control"
                                             check="[a-z]*$"
                                         />
-                                        <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }} onClick={() => save()} >
-                                            <img src={saveImg} style={{ width: "35px", height: "35px" }} alt="edit" />
+                                        <button className="transparentBtn" onClick={() => save()} >
+                                            <img src={saveImg} className="transparentEditBtn" alt="edit" />
                                         </button>
                                     </>
                                     :
                                     <>
-                                        <div style={{ flex: 1.5 }}>{item.name}</div>
-                                        <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }} onClick={() => edit(item)}>
-                                            <img src={editImg} style={{ width: "35px", height: "35px" }} alt="edit" />
+                                        <div className="oneAndHalfFlex">{item.name}</div>
+                                        <button className="transparentBtn" onClick={() => edit(item)}>
+                                            <img src={editImg} className="transparentEditBtn" alt="edit" />
                                         </button>
 
                                     </>

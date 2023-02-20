@@ -25,19 +25,18 @@ const StudentInGroup = connect((user) => ({
 
     const [studentInGroup, setStudentInGroup] = useState([]);
     const [studentToUpdate, setStudentToUpdate] = useState([]);
-
     const [groupName, setGroupName] = useState('');
     const [planId, setPlanId] = useState('');
-
-    const [alertType, setAlertType] = useState('');
+    const [alertType, setAlertType] = useState('info');
     const [alertMessage, setAlertMessage] = useState('');
-
+    const [alertVisible, setAlertVisible] = useState('hidden');
     const [modal, setModal] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
             setAlertMessage('');
             setAlertType('');
+            setAlertVisible('hidden');
         }, 5000);
         return () => clearInterval(interval);
     }, [alertType, alertMessage])
@@ -58,7 +57,7 @@ const StudentInGroup = connect((user) => ({
     }, [])
 
     const saveStudent = (student) => {
-        student = ({ ...student, groupInfo: { id: id } })
+        student = ({ ...student, groupId: id })
         saveStudentData(student, token).then((resp_) => {
             let objIndex = studentInGroup.findIndex((obj) => obj.id === resp_.id);
             if (objIndex === -1) {
@@ -78,49 +77,23 @@ const StudentInGroup = connect((user) => ({
         });
     }
 
-    const downloadPlan = (studentId, semester) => {
-        console.log("load ", semester)
-
-        fetch(`/xlsFiles/getPersonalPlanXlsFile?planId=${planId}&studentId=${studentId}&course=${semester}`, {
-            method: "get",
-            headers: {
-                "Authorization": token,
-                "Content-Type": 'application/json'
-            }
-        }).then(res => {
-            if (res.ok) {
-                const head = res.headers.get("content-disposition");
-                const file_ = head.split("=")[1];
-                return res.blob();
-            } else {
-                setAlertType("error");
-                setAlertMessage("ops have some problem");
-            }
-        }).then((blob) => {
-            console.log(blob)
-            const href = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = href;
-            link.setAttribute('download', "plan.xlsx");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            setAlertType("success");
-            setAlertMessage("plan downloaded");
-        }).catch((err) => {
-            return Promise.reject({ Error: 'Something Went Wrong', err });
-        });
+    const downloadPlan = (studentId, course) => {
+        savePersonalPlanInFile(planId, studentId, course, token).then((resp_) => {
+            setAlertType(resp_.type);
+            setAlertMessage(resp_.msg);
+            setAlertVisible("visible");
+        })
     }
 
     return (
         <div className="container">
-            <div>
+            <div style={{ visibility: alertVisible }}>
                 <Alert severity={alertType}>{alertMessage}</Alert>
             </div>
             {
                 hasWriteAuthority &&
                 <>
-                    <button style={{ margin: "10px" }} className="btn btn-warning" onClick={() => setModal(true)}>Додати студента</button>
+                    <button className="btn btn-warning m-1" onClick={() => setModal(true)}>Додати студента</button>
                     <MyModal visible={modal} setVisible={setModal}>
                         <StudentForm
                             studentToUpdate={studentToUpdate}
@@ -129,8 +102,6 @@ const StudentInGroup = connect((user) => ({
                     </MyModal>
                 </>
             }
-
-
 
             {studentInGroup.length === 0
                 ? <h2 className="text-center">No student in group {groupName}</h2>

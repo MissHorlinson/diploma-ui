@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { getStudyingTerm, saveStudyingTerm, getStudyingTermById } from "../../API/UtilDataService";
 
 import MyModal from "../UI/MyModal";
-
 import StudyingTermForm from "./StudyingTermForm";
 
 
@@ -12,19 +11,13 @@ const editImg = require(`../../icon/editIcon.png`);
 const saveImg = require(`../../icon/checkIcon.png`);
 
 
-
 const StudyingTerm = connect((user) => ({
     token: user.token,
     hasWriteAuthority: user.role === 3
 }))(({ token, hasWriteAuthority }) => {
-
     const [studyingTermList, setStudyingTermList] = useState([]);
-
     const [modal, setModal] = useState(false);
-
     const [termToUpdate, setTermToUpdate] = useState('');
-
-    const [needUpd, setNeedUpd] = useState(false);
 
     useEffect(() => {
         getStudyingTerm(token).then((resp_) => setStudyingTermList(resp_));
@@ -69,10 +62,10 @@ const StudyingTerm = connect((user) => ({
                 {
                     studyingTermList &&
                     studyingTermList.map((item) => (
-                        <li className="list-group-item" style={{ display: "flex", flexDirection: "row" }} key={item.id}>
-                            <div style={{ flex: 1.5 }}>{item.name}</div>
-                            <button style={{ backgroundColor: "transparent", borderColor: "transparent", flex: 0.5 }} onClick={() => edit(item.id)}>
-                                <img src={editImg} style={{ width: "35px", height: "35px" }} alt="edit" />
+                        <li className="list-group-item flexRow" key={item.id}>
+                            <div className="oneAndHalfFlex">{item.name}</div>
+                            <button className="transparentBtn" onClick={() => edit(item.id)}>
+                                <img src={editImg} className="transparentEditBtn" alt="edit" />
                             </button>
                         </li>
                     ))
