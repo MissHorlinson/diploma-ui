@@ -47,6 +47,26 @@ code {
   flex: 1.0
 }
 
+.flex0-3 {
+  flex: 0.3;
+}
+
+.flex0-6 {
+  flex: 0.6;
+}
+
+.flex0-25 {
+  flex: 0.25;
+}
+
+.flex0-55 {
+  flex: 0.55;
+}
+
+.flex2-75 {
+  flex: 2.75;
+}
+
 .oneAndHalfFlex {
   flex: 1.5 
 }

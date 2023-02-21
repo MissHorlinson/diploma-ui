@@ -91,12 +91,12 @@ const WeekForm = connect((user) => ({
 
     return (
         <div className="container">
-            <div className="FlexRow">
-                <label style={{ flex: 0.3, textAlign: "center" }}>Семестр</label>
-                <label style={{ flex: 1.5, textAlign: "center" }}>Тип діяльності</label>
-                <label style={{ flex: 1, textAlign: "center" }}>Початок</label>
-                <label style={{ flex: 1, textAlign: "center" }}>Тривалість</label>
-                <label style={{ flex: 0.6 }}></label>
+            <div className="flexRow">
+                <label className="text-center flex0-3">Семестр</label>
+                <label className="text-center oneAndHalfFlex">Тип діяльності</label>
+                <label className="text-center oneFlex">Початок</label>
+                <label className="text-center oneFlex">Тривалість</label>
+                <label className="flex0-6"></label>
             </div>
             {
                 fullWeeksPlanList.length > 0 ? fullWeeksPlanList.map((item, i) => (

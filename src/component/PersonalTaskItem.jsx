@@ -25,7 +25,7 @@ const PersonalTaskItem = ({ item, index, personalTaskFormList, setPersonalTask, 
 
     return (
         <div className="flexRow">
-            <div className="form-group" style={{ flex: 2.75 }}>
+            <div className="form-group flex2-75 ">
                 <MySelect
                     value={form}
                     onChange={(type) => { formSet(type, index) }}

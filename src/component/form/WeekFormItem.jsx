@@ -6,8 +6,8 @@ import MyInputValidator from "../UI/MyInputValdator";
 const WeekFormItem = ({ week, weekIndex, studuingTypeList, semesterList, setWeekData, onAdd, isLast }) => {
 
     return (
-        <div style={{ display: "flex", flexDirection: "row", paddingInline: 2 }} key={week.id}>
-            <div className="form-group" style={{ margin: 2, flex: 0.25 }}>
+        <div className="flexRow p-1" key={week.id}>
+            <div className="form-group m-1 flex0-25">
                 <MySelect
                     value={week.semester}
                     onChange={(type) => setWeekData('semester', type, weekIndex)}
@@ -54,7 +54,7 @@ const WeekFormItem = ({ week, weekIndex, studuingTypeList, semesterList, setWeek
                         <img src={require(`../../icon/plusIcon.png`)} alt="edit" onClick={() => onAdd(week.semester)} />
                     </button>
                     :
-                    <div style={{ flex: 0.55 }}></div>
+                    <div className="flex0-55"></div>
 
             }
         </div>
