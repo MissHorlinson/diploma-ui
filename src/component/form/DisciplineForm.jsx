@@ -145,7 +145,14 @@ const DisciplineForm = ({
         }
 
         let reporting_ = null;
-        if (reporting > 0) {
+        if (disciplineForUpdate) {
+            reporting_ = ({
+                id: disciplineForUpdate.reportingId,
+                disciplineReportingForm: {
+                    id: reporting
+                }
+            })
+        } else if (reporting > 0) {
             reporting_ = ({
                 disciplineReportingForm: {
                     id: reporting
@@ -153,7 +160,6 @@ const DisciplineForm = ({
             })
         }
 
-        console.log(independentHours)
         let indepndentHours_ = null;
         if (independentHours) {
             indepndentHours_ = {
@@ -162,6 +168,10 @@ const DisciplineForm = ({
             }
         }
 
+        // const indepndentHours_ = {
+        //             id: independentHoursId,
+        //             hoursNum: independentHours
+        //         }
 
 
         const finaldiscipline = {

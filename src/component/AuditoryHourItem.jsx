@@ -34,8 +34,12 @@ const AuditoryHourItem = ({ item, index, setAuditory, disciplineFormList, addAud
                 <MyInputValidator
                     value={hours}
                     onText={(text) => {
-                        setHours(text)
-                        setAuditory(index, text, "hoursNum", id)
+                        let replacedText = text;
+                        if (text.includes(",")) {
+                            replacedText = text.replace(",", ".")
+                        }
+                        setHours(replacedText)
+                        setAuditory(index, replacedText, "hoursNum", id)
                     }}
                     placeholder="Кол-во"
                     className="form-control"
