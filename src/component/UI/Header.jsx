@@ -35,7 +35,7 @@ const otherPath = [
     { name: "Посада", path: "/position" },
     { name: "Ступінь", path: "/degree" },
     { name: "Звання", path: "/rank" },
-    { name: "Каферда", path: "/department" },
+    { name: "Кафедра", path: "/department" },
 ]
 
 const ffeksLogo = require(`../../icon/ffeks_logo.png`);

@@ -153,10 +153,15 @@ const DisciplineForm = ({
             })
         }
 
-        const indepndentHours_ = {
-            id: independentHoursId,
-            hoursNum: independentHours
+        console.log(independentHours)
+        let indepndentHours_ = null;
+        if (independentHours) {
+            indepndentHours_ = {
+                id: independentHoursId,
+                hoursNum: independentHours
+            }
         }
+
 
 
         const finaldiscipline = {
@@ -213,7 +218,7 @@ const DisciplineForm = ({
                     className="form-control"
                     check="[А-Я][а-я]*$" />
                 <div className="invalid-feedback">
-                    Can be only numbers
+                    Шифр повинен складатися лише з літер: ОКЗ, ОКП, ВК
                 </div>
             </div>
 
@@ -226,10 +231,11 @@ const DisciplineForm = ({
                     className="form-control"
                     check="[0-9.0-9]+$" />
                 <div className="invalid-feedback">
-                    Can be only numbers
+                    Може складатися лише з цифр та крапки
                 </div>
             </div>
 
+            {/* TODO fix visibility for input and set inputed subject like selected  */}
             <div className="form-group">
                 <label>Название дисциплины</label>
                 {/* <div style={{ display: subjectNameVisible }}> */}
@@ -259,6 +265,8 @@ const DisciplineForm = ({
                 </div>
             </div>
 
+
+            {/* TODO  add NEW Department form */}
             <div className="form-group">
                 <label>Кафедра</label>
                 <MySelect

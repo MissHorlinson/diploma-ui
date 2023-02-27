@@ -121,21 +121,23 @@ const Plan = connect((user) => ({
     }, []);
 
     const savePlan = (planInfo) => {
-        savePlanInfo(planInfo, token).then((resp_) => {
-            let objIndex = planList.findIndex((obj) => obj.planId === resp_.planId)
-            if (objIndex === -1) {
-                setPlanList([...planList, resp_].sort((a, b) => a.planId - b.planId));
-            } else {
-                planList[objIndex] = resp_;
-                setPlanList([...planList].sort((a, b) => a.planId - b.planId));
-            }
-            setPlanToUpdate('')
-            setModal(false)
-        })
+        savePlanInfo(planInfo, token).then((resp_) => unpdateViewPlanList(resp_))
     }
 
     const uploadFromFile = (file) => {
-        uploadFileToServer(file, token).then(resp_ => console.log(resp_));
+        uploadFileToServer(file, token).then(resp_ => unpdateViewPlanList(resp_));
+    }
+
+    const unpdateViewPlanList = (resp_) => {
+        let objIndex = planList.findIndex((obj) => obj.planId === resp_.planId)
+        if (objIndex === -1) {
+            setPlanList([...planList, resp_].sort((a, b) => a.planId - b.planId));
+        } else {
+            planList[objIndex] = resp_;
+            setPlanList([...planList].sort((a, b) => a.planId - b.planId));
+        }
+        setPlanToUpdate('')
+        setModal(false)
     }
 
     const getForUpdate = (planId) => {
@@ -175,7 +177,7 @@ const Plan = connect((user) => ({
                                         studyingFormList={studyingFormList}
                                         stepList={stepList}
                                         planToUpdate={planToUpdate}
-                                        onCancel={() => { setModal(false); setPlanToUpdate('') }}
+                                        onCancel={() => { setModal(false) }}
                                         onCreate={savePlan}
                                         onCreateFromFile={uploadFromFile} />
                                 </MyModal>
