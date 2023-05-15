@@ -1,4 +1,10 @@
-const { getRoleUrl, getStatusUrl, getUsersUrl, createUserUrl, getUserByUsernameUrl } = require("./url");
+const {
+    getRoleUrl,
+    getStatusUrl,
+    getUsersUrl,
+    createUserUrl,
+    getUserByUsernameUrl
+} = require("./url");
 
 export const getRoleList = (token) => fetch(getRoleUrl, {
     method: "GET",

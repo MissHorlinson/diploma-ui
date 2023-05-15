@@ -86,6 +86,12 @@ code {
   flex: 0.5 
 }
 
+.transparentWeekDeleteBtn {
+  background-color: transparent;
+  border-color: transparent;
+  flex: 0.2 
+}
+
 .transparentEditBtn {
   width: 35px;
   height: 35px
@@ -100,11 +106,19 @@ code {
 .personalTaskBtn {
   background-color: transparent;
   border-color: transparent;
-  flex: 0.25
+  flex: 0.1
 }
 
-.empty-0-29-space {
-  flex: 0.29
+.empty-0-15-space {
+  flex: 0.15
+}
+
+.empty-0-27-space {
+  flex: 0.27
+}
+
+.empty-0-1-space {
+  flex: 0.1
 }
 
 .logoStyle {
@@ -115,6 +129,7 @@ code {
 .titleRow {
   background-color: rgb(166, 239, 248);
   display: flex;
+  flex: 1;
   flex-direction: row;
 }
 
@@ -153,6 +168,7 @@ code {
 .bodyContainer  {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .bodyRow {

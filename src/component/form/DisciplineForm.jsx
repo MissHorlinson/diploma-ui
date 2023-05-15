@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import MyInputValidator from "../UI/MyInputValdator";
 import MySelect from "../UI/MySelect";
-
-
 import PersonalTaskItem from "../PersonalTaskItem";
 import AuditoryHourItem from "../AuditoryHourItem";
 
@@ -15,11 +13,11 @@ const DisciplineForm = ({
     personalTaskFormList,
     subjectNameList,
     departmentList,
-    semesterNum,
+    semesterList,
     disciplineForUpdate,
     onCancel,
     onCreate,
-    saveNewSubjectName
+    saveNewSubjectName, newSavedSubjectName
 }) => {
     const [subjectName, setSubjectName] = useState('');
     const [disciplineType, setDisciplineType] = useState('');
@@ -32,10 +30,19 @@ const DisciplineForm = ({
     const [independentHoursId, setIndependentHoursId] = useState('');
     const [personalTasks, setPersonalTasks] = useState([]);
     const [auditoryHours, setAuditoryHours] = useState([]);
+    const [subgroupNum, setSubgroupNum] = useState('');
+
+    const [auditoryHoursToRemove, setAuditoryHoursToRemove] = useState([])
 
     const [addSubjectNameVisible, setAddSubjectNameVisible] = useState("none");
-    const [subjectNameVisible, setSubjectNameVisible] = useState("contents");
+    const [subjectNameVisible, setSubjectNameVisible] = useState("inline");
     const [subjectNameForSave, setSubjectNameForSave] = useState('');
+
+    const [addDepartmentVisible, setAddDepartmentVisible] = useState("none");
+    const [departmentVisible, setDepartmentVisible] = useState("inline");
+    const [departmentForSave, setDepartmentForSave] = useState('');
+
+    const [subgroupVisible, setSubgroupVisible] = useState("none");
 
     const clearForm = () => {
         setSubjectName('');
@@ -46,10 +53,14 @@ const DisciplineForm = ({
         setDisciplineFullNum('');
         setReporting(2);
         setIndependentHours('');
+        setIndependentHoursId('');
         setPersonalTasks([]);
         setAuditoryHours([]);
         setAddSubjectNameVisible('none');
         setSubjectNameForSave('');
+        setAuditoryHoursToRemove([]);
+        setSubgroupVisible('none');
+        setSubgroupNum('')
     }
 
     useEffect(() => {
@@ -71,21 +82,22 @@ const DisciplineForm = ({
         }
     }, [disciplineForUpdate]);
 
-    useEffect(() => { clearForm() }, [])
-
-    const semesterList = [...Array(semesterNum).keys()].map((item) => (
-        {
-            id: item + 1,
-            name: item + 1
+    useEffect(() => {
+        if (disciplineType) {
+            setCipher(disciplineTypeList[disciplineType - 1].cipher)
         }
-    ))
+
+    }, [disciplineType])
+
+    useEffect(() => { clearForm() }, [])
 
     const setAuditory = (index, val, key, id_) => {
         let oldValue = auditoryHours[index];
         let newValue;
-        if (key == "disciplineForm") {
+        if (key === "disciplineForm") {
+            console.log(val)
             newValue = { ...oldValue, disciplineForm: { id: val }, disciplineFormId: val, id: id_ }
-        } else if (key == "hoursNum") {
+        } else if (key === "hoursNum") {
             newValue = { ...oldValue, hoursNum: val, id: id_ }
         }
         auditoryHours[index] = newValue
@@ -93,7 +105,7 @@ const DisciplineForm = ({
     }
 
     const setPersonalTask = (val, index, id_) => {
-        let newValue = { personalTaskForm: { id: val }, personalTaskFormId: val, id: id_ }
+        let newValue = { personalTaskFormId: val, id: id_ }
         personalTasks[index] = newValue;
         setPersonalTasks(personalTasks)
     }
@@ -103,6 +115,9 @@ const DisciplineForm = ({
     }
 
     const removeAuditoryHours = (index) => {
+        if (auditoryHours[index].id !== null) {
+            setAuditoryHoursToRemove(hours_ => [...hours_, ({ id: auditoryHours[index].id })])
+        }
         auditoryHours.splice(index, 1);
         setAuditoryHours([...auditoryHours])
     }
@@ -123,8 +138,8 @@ const DisciplineForm = ({
             num = disciplineFullNum;
         }
 
-        let auditoryH;
-        let personalT;
+        let auditoryH = [];
+        let personalT = [];
         let disciplineId = null;
 
         if (disciplineForUpdate) {
@@ -168,25 +183,20 @@ const DisciplineForm = ({
             }
         }
 
-        // const indepndentHours_ = {
-        //             id: independentHoursId,
-        //             hoursNum: independentHours
-        //         }
-
-
         const finaldiscipline = {
             id: disciplineId,
             subjectName: { id: subjectName },
             disciplineType: { id: disciplineType },
             department: { id: department },
             semester: semester,
-            cipher: cipher,
             disciplineNum: num,
             disciplineSubNum: subNum,
             reporting: reporting_,
             independentHours: indepndentHours_,
             auditoryHoursList: auditoryH,
-            personalTaskList: personalT
+            personalTaskList: personalT,
+            auditoryHoursToRemove: auditoryHoursToRemove,
+            subgroupNum: subgroupNum
         }
         onCreate(finaldiscipline);
         clearForm();
@@ -199,23 +209,50 @@ const DisciplineForm = ({
 
     const addSubjectName = () => {
         setAddSubjectNameVisible("inline");
+        setSubjectNameVisible("none")
     }
 
     const saveSubjectName = () => {
         setAddSubjectNameVisible("none");
         const subjectName_ = { name: subjectNameForSave }
-        saveNewSubjectName(subjectName_)
+        saveNewSubjectName(subjectName_);
         setSubjectNameForSave('');
+        setSubjectNameVisible("inline")
     }
+
+    const addDepartment = () => {
+        setAddDepartmentVisible("inline");
+        setDepartmentVisible("none")
+    }
+
+    const saveDepartment = () => {
+        setAddDepartmentVisible("none");
+        const department_ = { name: departmentForSave }
+        saveNewSubjectName(department_);
+        setDepartmentForSave('');
+        setDepartmentVisible("inline")
+    }
+
+    useEffect(() => {
+        setSubjectName(newSavedSubjectName)
+    }, [newSavedSubjectName])
+
+    useEffect(() => {
+        if (auditoryHours.find(hour_ => hour_.disciplineFormId === "2" || hour_.disciplineFormId === "3")) {
+            setSubgroupVisible("inline")
+        } else {
+            setSubgroupVisible("none")
+        }
+    }, [auditoryHours])
 
     return (
         <div className="container">
             <div className="form-group">
-                <label>Тип дисциплины</label>
+                <label>Тип дисципліни</label>
                 <MySelect
                     value={disciplineType}
                     onChange={(type) => setDisciplineType(type)}
-                    defaultValue="Тип дисциплины"
+                    defaultValue="Тип дисципліни"
                     options={disciplineTypeList} />
             </div>
 
@@ -223,7 +260,7 @@ const DisciplineForm = ({
                 <label>Шифр</label>
                 <MyInputValidator
                     value={cipher}
-                    onText={text => setCipher(text)}
+                    readOnly
                     placeholder="Шифр"
                     className="form-control"
                     check="[А-Я][а-я]*$" />
@@ -232,7 +269,7 @@ const DisciplineForm = ({
                 </div>
             </div>
 
-            <div className="form-group">
+            < div className="form-group" >
                 <label>Номер</label>
                 <MyInputValidator
                     value={disciplineFullNum}
@@ -243,29 +280,28 @@ const DisciplineForm = ({
                 <div className="invalid-feedback">
                     Може складатися лише з цифр та крапки
                 </div>
-            </div>
+            </div >
 
-            {/* TODO fix visibility for input and set inputed subject like selected  */}
-            <div className="form-group">
-                <label>Название дисциплины</label>
-                {/* <div style={{ display: subjectNameVisible }}> */}
-                <div className="flexRow">
-                    <MySelect
-                        value={subjectName}
-                        onChange={type => setSubjectName(type)}
-                        defaultValue="Название дисциплины"
-                        options={subjectNameList} />
-                    <button className="transparentBtn">
-                        <img src={require(`../../icon/plusIcon.png`)} alt="+" onClick={addSubjectName} />
-                    </button>
+            <div className="form-group" >
+                <label>Назва дисципліни</label>
+                <div style={{ display: subjectNameVisible }}>
+                    <div className="flexRow">
+                        <MySelect
+                            value={subjectName}
+                            onChange={type => setSubjectName(type)}
+                            defaultValue="Назва дисципліни"
+                            options={subjectNameList} />
+                        <button className="transparentBtn">
+                            <img src={require(`../../icon/plusIcon.png`)} alt="+" onClick={addSubjectName} />
+                        </button>
+                    </div>
                 </div>
-                {/* </div> */}
                 <div style={{ display: addSubjectNameVisible }}>
                     <div className="flexRow">
                         <MyInputValidator
                             value={subjectNameForSave}
                             onText={text => setSubjectNameForSave(text)}
-                            placeholder="Название предмета"
+                            placeholder="Назва дисципліни"
                             className="form-control"
                             check="[a-z A-Z]*$" />
                         <button className="transparentBtn">
@@ -275,17 +311,34 @@ const DisciplineForm = ({
                 </div>
             </div>
 
-
-            {/* TODO  add NEW Department form */}
             <div className="form-group">
                 <label>Кафедра</label>
-                <MySelect
-                    value={department}
-                    onChange={(type) => setDepartment(type)}
-                    defaultValue="Кафедра"
-                    options={departmentList} />
+                <div style={{ display: departmentVisible }}>
+                    <div className="flexRow">
+                        <MySelect
+                            value={department}
+                            onChange={(type) => setDepartment(type)}
+                            defaultValue="Кафедра"
+                            options={departmentList} />
+                        <button className="transparentBtn">
+                            <img src={require(`../../icon/plusIcon.png`)} alt="+" onClick={addDepartment} />
+                        </button>
+                    </div>
+                </div>
+                <div style={{ display: addDepartmentVisible }}>
+                    <div className="flexRow">
+                        <MyInputValidator
+                            value={departmentForSave}
+                            onText={text => setDepartmentForSave(text)}
+                            placeholder="Назва кафедри"
+                            className="form-control"
+                            check="[a-z A-Z]*$" />
+                        <button className="transparentBtn">
+                            <img src={require(`../../icon/checkIcon.png`)} alt="+" onClick={saveDepartment} />
+                        </button>
+                    </div>
+                </div>
             </div>
-
 
             <div className="form-group">
                 <label>Семестр</label>
@@ -296,15 +349,15 @@ const DisciplineForm = ({
                     options={semesterList} />
             </div>
             <div className="form-group" >
-                <label>Отчетность</label>
+                <label>Звітність</label>
                 <MySelect
                     value={reporting}
                     onChange={(type) => setReporting(type)}
-                    defaultValue="Отчетность"
+                    defaultValue="Звітність"
                     options={reportingformList} />
             </div>
 
-            <label>Аудиторные часы</label>
+            <label>Аудиторні години</label>
             {
                 auditoryHours.length > 0 ? auditoryHours.map((item, i) => (
                     <div key={i}>
@@ -328,22 +381,34 @@ const DisciplineForm = ({
                         isLast={true} />
             }
 
-
-            <div className="form-group">
-                <label>Самостоятельные часы</label>
+            <div className="form-group" style={{ display: subgroupVisible }}>
+                <label>Кількість підгруп</label>
                 <MyInputValidator
-                    value={independentHours?.hoursNum}
-                    onText={text => setIndependentHours(text)}
-                    placeholder="Самостоятельные часы"
+                    value={subgroupNum}
+                    onText={text => setSubgroupNum(text)}
+                    placeholder="Кількість підгруп"
                     className="form-control"
                     check="^[0-9]+" />
                 <div className="invalid-feedback">
-                    Can be only numbers
+                    Може бути тільки числовим значенням
+                </div>
+            </div>
+
+            <div className="form-group">
+                <label>Самостійні години</label>
+                <MyInputValidator
+                    value={independentHours}
+                    onText={text => setIndependentHours(text)}
+                    placeholder="Самостійні години"
+                    className="form-control"
+                    check="^[0-9]+" />
+                <div className="invalid-feedback">
+                    Може бути тільки числовим значенням
                 </div>
             </div>
 
 
-            <label>Индивидуальное задание</label>
+            <label>Індивідуальні завдання</label>
             {
                 personalTasks.length > 0 ? personalTasks.map((item, i) => (
                     <div key={i}>

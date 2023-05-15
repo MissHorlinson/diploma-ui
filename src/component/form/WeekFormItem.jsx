@@ -3,7 +3,7 @@ import React from "react";
 import MySelect from "../UI/MySelect";
 import MyInputValidator from "../UI/MyInputValdator";
 
-const WeekFormItem = ({ week, weekIndex, studuingTypeList, semesterList, setWeekData, onAdd, isLast }) => {
+const WeekFormItem = ({ week, weekIndex, studuingTypeList, semesterList, setWeekData, onAdd, onDelete, isLast }) => {
 
     return (
         <div className="flexRow p-1" key={week.id}>
@@ -50,11 +50,21 @@ const WeekFormItem = ({ week, weekIndex, studuingTypeList, semesterList, setWeek
 
             {
                 isLast ?
-                    <button className="transparentBtn">
-                        <img src={require(`../../icon/plusIcon.png`)} alt="edit" onClick={() => onAdd(week.semester)} />
-                    </button>
+                    <>
+                        <button className="transparentWeekDeleteBtn">
+                            <img src={require(`../../icon/deleteIcon.png`)} alt="x" onClick={() => onDelete(week.id, weekIndex)} />
+                        </button>
+                        <button className="transparentWeekDeleteBtn">
+                            <img src={require(`../../icon/plusIcon.png`)} alt="edit" onClick={() => onAdd(week.semester)} />
+                        </button>
+                    </>
                     :
-                    <div className="flex0-55"></div>
+                    <>
+                        <button className="transparentWeekDeleteBtn">
+                            <img src={require(`../../icon/deleteIcon.png`)} alt="x" onClick={() => onDelete(week.id, weekIndex)} />
+                        </button>
+                        <div className="empty-0-27-space"></div>
+                    </>
 
             }
         </div>

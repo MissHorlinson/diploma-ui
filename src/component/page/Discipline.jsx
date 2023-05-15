@@ -32,7 +32,9 @@ const Discipline = connect((user) => ({
     const [personalTaskFormList, setPersonalTaskFormList] = useState([]);
     const [subjectNameList, setSubjectNameList] = useState([]);
     const [departmentList, setDepartmentList] = useState([]);
-    const [semestNum, setSemesterNum] = useState(0);
+    const [semestList, setSemesterList] = useState([]);
+
+    const [newSavedSubjectName, setNewSavedSubjectName] = useState('');
 
     const [modal, setModal] = useState(false);
 
@@ -57,7 +59,12 @@ const Discipline = connect((user) => ({
         getReportingForm(token).then((reporting) => setReportingFormList(reporting));
         getSubjectName(token).then((subjects) => setSubjectNameList(subjects));
         getDepartment(token).then((departments) => setDepartmentList(departments));
-        getSemesterNum(planId, token).then((num) => setSemesterNum(num));
+        getSemesterNum(planId, token).then((num) => setSemesterList([...Array(num).keys()].map((item) => (
+            {
+                id: item + 1,
+                name: item + 1
+            }
+        ))));
     });
 
     useEffect(() => {
@@ -83,7 +90,8 @@ const Discipline = connect((user) => ({
 
     const saveNewSubjectName = (data) => {
         saveSubjectNameData(token, data).then((resp_) => {
-            setSubjectNameList([...subjectNameList, resp_].sort((a, b) => a.name.localeCompare(b.name)))
+            setSubjectNameList([...subjectNameList, resp_].sort((a, b) => a.name.localeCompare(b.name)));
+            setNewSavedSubjectName(resp_.id)
         })
     }
 
@@ -105,12 +113,13 @@ const Discipline = connect((user) => ({
                     personalTaskFormList={personalTaskFormList}
                     subjectNameList={subjectNameList}
                     departmentList={departmentList}
-                    semesterNum={semestNum}
+                    semesterList={semestList}
                     disciplineForUpdate={disciplineForUpdate}
                     onCancel={() => setModal(false)}
                     onCreate={saveDiscipline}
                     token={token}
-                    saveNewSubjectName={saveNewSubjectName} />
+                    saveNewSubjectName={saveNewSubjectName}
+                    newSavedSubjectName={newSavedSubjectName} />
             </MyModal>
 
             {

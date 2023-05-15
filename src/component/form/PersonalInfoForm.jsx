@@ -19,7 +19,7 @@ const PersonalInfoForm = ({
                     name="firstName"
                     placeholder="First Name"
                     className="form-control"
-                    check="[А-Я][а-яїієґ]*$"
+                    check="[А-ЯІЄЇҐ][а-яїієґ]*$"
                 />
                 <div className="invalid-feedback">
                     Ім'я повинне прчинатися з великой літери і не може містити в собі цифри
@@ -34,7 +34,7 @@ const PersonalInfoForm = ({
                     name="secondName"
                     placeholder="Second Name"
                     className="form-control"
-                    check="[А-Я][а-яїієґ]*$"
+                    check="[А-ЯІЄЇҐ][а-яїієґ]*$"
                 />
                 <div className="invalid-feedback">
                     По батькові повинне прчинатися з великой літери і не може містити в собі цифри
@@ -50,7 +50,8 @@ const PersonalInfoForm = ({
                     name="lastName"
                     placeholder="Last Name"
                     className="form-control"
-                    check="^[А-Я][а-яїієґ]*$"
+                    check="^[А-ЯІЄЇҐ][а-яїієґ]*[\s-]*[А-ЯІЄЇҐ]?[а-яїієґ]*"
+                // check="^[А-ЯІЄЇҐ][а-яїієґ\s-]*$"
                 />
                 <div className="invalid-feedback">
                     Прізвище повинне прчинатися з великой літери і не може містити в собі цифри

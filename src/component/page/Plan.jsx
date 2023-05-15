@@ -71,7 +71,7 @@ const Plan = connect((user) => ({
     useEffect(() => {
         const interval = setInterval(() => {
             setAlertMessage('');
-            setAlertType('');
+            setAlertType('info');
             setAlertVisible('hidden');
         }, 5000);
         return () => clearInterval(interval);

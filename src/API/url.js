@@ -65,6 +65,7 @@ export const getSemesterNumUrl = `/planInfo/getSemesterNum/`;
 
 export const saveWeekPlanUrl = `/weekPlan/save`;
 export const getWeekByPlanIdUrl = (id) => `/weekPlan/getByPlan/${id}`;
+export const deleteWeekByIdUrl = (id) => `/weekPlan/delete/${id}`;
 
 export const getGroupListUrl = `/groupInfo/all`;
 export const getGroupByIdUrl = (id) => `/groupInfo/getById/${id}`;

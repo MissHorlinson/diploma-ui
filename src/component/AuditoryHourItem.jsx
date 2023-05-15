@@ -26,7 +26,7 @@ const AuditoryHourItem = ({ item, index, setAuditory, disciplineFormList, addAud
                         setForm(type);
                         setAuditory(index, type, "disciplineForm", id)
                     }}
-                    defaultValue="Аудиторные часы"
+                    defaultValue="Аудиторні години"
                     options={disciplineFormList} />
             </div>
 
@@ -54,12 +54,13 @@ const AuditoryHourItem = ({ item, index, setAuditory, disciplineFormList, addAud
                         <button className="auditoryHoursBtn">
                             <img src={require(`../icon/plusIcon.png`)} alt="+" onClick={addAuditoryHours} />
                         </button>
+                    </>
+                    :
+                    <>
                         <button className="auditoryHoursBtn">
                             <img src={require(`../icon/deleteIcon.png`)} alt="x" onClick={() => removeAuditoryHours(index)} />
                         </button>
                     </>
-                    :
-                    <div className="empty-0-29-space "></div>
             }
         </div>
     )

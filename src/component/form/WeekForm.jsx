@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { useFetching } from "../../hooks/useFetching";
 
-import { getSemesterNum, saveWeekPlanData, getWeekByPlanId } from "../../API/PlanInfoService";
+import { getSemesterNum, saveWeekPlanData, getWeekByPlanId, deleteWeekItemById } from "../../API/PlanInfoService";
 import { getStudyingType } from "../../API/UtilDataService";
 
 import WeekFormItem from "./WeekFormItem";
@@ -51,6 +51,15 @@ const WeekForm = connect((user) => ({
 
     const addWeek = () => {
         setFullWeeksPlanList((weeks_) => [...weeks_, {}])
+    }
+
+    const deleteWeelItem = (id, index) => {
+        if (id) {
+            deleteWeekItemById(id, token).then((resp_) => console.log(resp_))
+        }
+        const weekItemToRemove = fullWeeksPlanList.findIndex((obj, index_) => index_ === index);
+        fullWeeksPlanList.splice(weekItemToRemove, 1)
+        setFullWeeksPlanList([...fullWeeksPlanList])
     }
 
     const saveWeekData = () => {
@@ -108,6 +117,7 @@ const WeekForm = connect((user) => ({
                             semesterList={semesterList}
                             setWeekData={setWeekData}
                             onAdd={addWeek}
+                            onDelete={deleteWeelItem}
                             isLast={fullWeeksPlanList.length - 1 === i}
                         />
                     </div>
@@ -121,6 +131,7 @@ const WeekForm = connect((user) => ({
                             semesterList={semesterList}
                             setWeekData={setWeekData}
                             onAdd={addWeek}
+                            onDelete={deleteWeelItem}
                             isLast={true} />
                     </div>
             }

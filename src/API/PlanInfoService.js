@@ -11,7 +11,8 @@ const {
     getPlanByGroupUrl,
     saveFullPlanInFileUrl,
     savePersonalPlanInFileUrl,
-    uploadFileUrl
+    uploadFileUrl,
+    deleteWeekByIdUrl
 } = require("./url");
 
 export const getPlanList = (token) => fetch(getPlanInfoListUrl, {
@@ -67,6 +68,15 @@ export const saveWeekPlanData = (weeksPlan, token) => fetch(saveWeekPlanUrl, {
     body: JSON.stringify(weeksPlan)
 }).then(resp => resp.json());
 
+
+export const deleteWeekItemById = (id, token) => fetch(deleteWeekByIdUrl(id), {
+    method: "POST",
+    headers: {
+        "Authorization": token
+    }
+}).then(resp => resp.json());
+
+
 export const getDisciplineByPlan = (id, token) => fetch(getDisciplineByPlanUrl(id), {
     method: "GET",
     headers: {
@@ -119,11 +129,10 @@ export const saveFullPlanInFile = (planId, token) => fetch(saveFullPlanInFileUrl
         return ({ type: "error", msg: "fullPlanDownload" })
     }
 }).then((blob) => {
-    console.log(blob)
     const href = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = href;
-    link.setAttribute('download', "plan.xlsx");
+    link.setAttribute('download', "full plan.xlsx");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -150,7 +159,7 @@ export const savePersonalPlanInFile = (planId, studentId, course, token) => fetc
     const href = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = href;
-    link.setAttribute('download', "plan.xlsx");
+    link.setAttribute('download', "course plan.xlsx");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

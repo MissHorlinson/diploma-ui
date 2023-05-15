@@ -29,16 +29,26 @@ const PersonalTaskItem = ({ item, index, personalTaskFormList, setPersonalTask, 
                 <MySelect
                     value={form}
                     onChange={(type) => { formSet(type, index) }}
-                    defaultValue="Индивидуальное задание"
+                    defaultValue="Індивідуальні завдання"
                     options={personalTaskFormList} />
             </div>
             {
                 isLast ?
-                    <button className="personalTaskBtn">
-                        <img src={require(`../icon/plusIcon.png`)} alt="+" onClick={addPersonalTask} />
-                    </button>
+                    <>
+                        <button className="auditoryHoursBtn">
+                            <img src={require(`../icon/deleteIcon.png`)} alt="x" onClick={() => console.log("remove")} />
+                        </button>
+                        <button className="personalTaskBtn">
+                            <img src={require(`../icon/plusIcon.png`)} alt="+" onClick={addPersonalTask} />
+                        </button>
+                    </>
                     :
-                    <div className="empty-0-29-space "> </div>
+                    <>
+                        <button className="auditoryHoursBtn">
+                            <img src={require(`../icon/deleteIcon.png`)} alt="x" onClick={() => console.log("remove")} />
+                        </button>
+                        <div className="empty-0-15-space"></div>
+                    </>
             }
         </div>
     )
